@@ -8,10 +8,8 @@ gsap.registerPlugin(ScrollTrigger);
 import { Header } from './components/Header/Header';
 import { Hero } from './components/Hero/Hero';
 import { About } from './components/About/About';
-import { Journey } from './components/Journey/Journey';
 import { Projects } from './components/Projects/Projects';
-import { Stack } from './components/Stack/Stack';
-import { Certifications } from './components/Certifications/Certifications';
+
 import { Contact } from './components/Contact/Contact';
 import { BootTerminal } from './components/BootTerminal/BootTerminal';
 import { FloatingTerminalBtn } from './components/FloatingTerminalBtn/FloatingTerminalBtn';
@@ -84,10 +82,7 @@ export default function App() {
             <main>
               <Hero />
               <About />
-              <Journey />
               <Projects />
-              <Stack />
-              <Certifications />
               <Contact />
             </main>
             
