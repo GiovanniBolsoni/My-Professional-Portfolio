@@ -1,4 +1,6 @@
-// No React import
+import { useRef } from 'react';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
 import styles from './About.module.css';
 import { profile } from '../../data/resume';
 import { i18n } from '../../data/i18n';
@@ -6,22 +8,37 @@ import { i18n } from '../../data/i18n';
 export const About = () => {
   const lang = 'pt';
   const t = i18n[lang].commands;
+  const containerRef = useRef<HTMLElement>(null);
+
+  useGSAP(() => {
+    gsap.from('.about-elem', {
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: 'top 80%',
+      },
+      y: 30,
+      opacity: 0,
+      duration: 0.6,
+      stagger: 0.15,
+      ease: 'power2.out'
+    });
+  }, { scope: containerRef });
 
   return (
-    <section className={styles.about} id="about">
+    <section className={styles.about} id="about" ref={containerRef}>
       <div className={styles.container}>
-        <h2 className={styles.title}>
+        <h2 className={`${styles.title} about-elem`}>
           <span className={styles.prompt}>&gt;</span> {t.about}
         </h2>
         
         <div className={styles.content}>
-          <div className={styles.textBlock}>
+          <div className={`${styles.textBlock} about-elem`}>
             {profile.summary.map((paragraph, idx) => (
               <p key={idx} className={styles.paragraph}>{paragraph}</p>
             ))}
           </div>
           
-          <div className={styles.stats}>
+          <div className={`${styles.stats} about-elem`}>
             <div className={styles.statCard}>
               <span className={styles.statNumber}>2+</span>
               <span className={styles.statLabel}>Anos de TI</span>
