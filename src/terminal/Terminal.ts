@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { themes, applyTheme, defaultThemeName, type Theme } from "../themes/themes";
-import { hostname } from "../data/resumeData";
+import { hostname } from "../data/resume";
 import { createCommands } from "./commands";
 import type { Command } from "./types";
 import { escapeHtml } from "./utils";
@@ -130,7 +130,8 @@ export class Terminal {
     return [
       artLines,
       "",
-      `<span class="term-accent">Bem-vindo(a) ao meu terminal!</span> Digite <span class="term-cyan">help</span> para começar a explorar.`,
+      `<span class="term-accent">Bem-vindo(a) ao meu terminal!</span> Digite <span class="term-cyan">help</span> para ver os comandos.`,
+      `Para acessar a interface gráfica, digite <span class="term-cyan">start</span>.`
     ].join("\n");
   }
 

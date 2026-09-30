@@ -1,0 +1,87 @@
+.terminalWrapper {
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--bg); /* It will pick up the current theme */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.terminalContainer {
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  /* Additional terminal styling if not handled by index.css or Terminal.ts */
+}
+
+/* Base styles for the Vanilla Terminal output to look right */
+:global(.terminal) {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+}
+
+:global(.terminal-output) {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+  padding-right: 1rem;
+}
+
+:global(.terminal-output::-webkit-scrollbar) {
+  width: 8px;
+}
+:global(.terminal-output::-webkit-scrollbar-track) {
+  background: var(--bg);
+}
+:global(.terminal-output::-webkit-scrollbar-thumb) {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+:global(.term-line) {
+  min-height: 1.5rem;
+  word-break: break-word;
+  white-space: pre-wrap;
+  margin: 0.2rem 0;
+}
+
+:global(.terminal-input-line) {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+:global(.terminal-input) {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--fg);
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+}
+
+:global(.prompt-user) { color: var(--cyan); }
+:global(.prompt-punct) { color: var(--muted); }
+:global(.prompt-host) { color: var(--accent); }
+:global(.term-accent) { color: var(--accent); }
+:global(.term-cyan) { color: var(--cyan); }
+:global(.term-muted) { color: var(--muted); }
+:global(.term-error) { color: #ff5f56; }
+:global(.cmd-echo) { color: var(--fg); }
+:global(.banner-art) {
+  color: var(--cyan);
+  font-weight: bold;
+}
+:global(.term-link) {
+  color: var(--cyan);
+  text-decoration: underline;
+  cursor: pointer;
+}
+:global(.term-link:hover) {
+  color: var(--accent);
+}
