@@ -9,6 +9,7 @@ import { Header } from './components/Header/Header';
 import { Hero } from './components/Hero/Hero';
 import { About } from './components/About/About';
 import { Projects } from './components/Projects/Projects';
+import { CommandPalette } from './components/CommandPalette/CommandPalette';
 
 import { Contact } from './components/Contact/Contact';
 import { BootTerminal } from './components/BootTerminal/BootTerminal';
@@ -86,6 +87,7 @@ export default function App() {
               <Contact />
             </main>
             
+            <CommandPalette />
             <FloatingTerminalBtn onClick={() => setShowOverlay(true)} />
             
             <AnimatePresence>
