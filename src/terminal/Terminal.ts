@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { themes, applyTheme, defaultThemeName, type Theme } from "../themes/themes";
 import { hostname } from "../data/resume";
 import { createCommands } from "./commands";

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import {
   profile,
   skills as stack,
@@ -6,25 +6,20 @@ import {
   socials as social,
   experiences as experience,
   education,
+  currentStudies,
   certifications,
   languages,
 } from "../data/resume";
 
-const about = profile.objective + "\n" + profile.summary.join("\n");
-const resumeLink = profile.resumePdf;
-const email = profile.email;
+
 import type { Command, CommandContext } from "./types";
 import { escapeHtml, linkify, renderJsonBlock } from "./utils";
 
 function formatAbout(): string {
-  return about
-    .split("\n")
-    .map((line) =>
-      line.startsWith("Objetivo:")
-        ? `<span class="term-accent">${escapeHtml(line)}</span>`
-        : escapeHtml(line)
-    )
-    .join("\n");
+  return [
+    `<span class="term-accent">Objetivo: ${escapeHtml(profile.objective)}</span>`,
+    ...profile.summary.map(escapeHtml)
+  ].join("\n");
 }
 
 function formatStack(): string {
@@ -35,31 +30,31 @@ function formatProjects(): string {
   return projects
     .map((p, i) =>
       [
-        `<span class="term-cyan">${i + 1}. ${escapeHtml(p.name)}</span> <span class="term-muted">(${escapeHtml(
+        `<span class="term-cyan">${i + 1}. ${escapeHtml(p.title)}</span> <span class="term-muted">(${escapeHtml(
           p.tech
         )})</span>`,
         `   ${escapeHtml(p.description)}`,
-        `   ${linkify(p.link)}`,
+        `   ${linkify(p.url)}`,
       ].join("\n")
     )
     .join("\n\n");
 }
 
 function formatSocial(): string {
-  return social.map((s) => `${escapeHtml(s.label)}: ${linkify(s.url)}`).join("\n");
+  return social.map((s) => `${escapeHtml(s.label)}: ${linkify(s.href)}`).join("\n");
 }
 
 function formatResume(): string {
-  if (resumeLink.startsWith("http")) {
-    return `Currículo em PDF: ${linkify(resumeLink)}`;
+  if (profile.resumePdf && profile.resumePdf.startsWith("http")) {
+    return `Currículo em PDF: ${linkify(profile.resumePdf)}`;
   }
   return `Currículo em PDF: <span class="term-muted">ainda não disponível (placeholder: ${escapeHtml(
-    resumeLink
+    profile.resumePdf || ''
   )})</span>`;
 }
 
 function formatEmail(): string {
-  return `Email: ${linkify(`mailto:${email}`, email)}`;
+  return `Email: ${linkify(`mailto:${profile.email}`, profile.email)}`;
 }
 
 function formatExperience(): string {
@@ -77,33 +72,35 @@ function formatExperience(): string {
 }
 
 function formatEducation(): string {
-  return education
-    .map((ed) =>
-      [
-        `<span class="term-accent">${escapeHtml(ed.course)}</span>`,
-        `<span class="term-cyan">${escapeHtml(ed.institution)}</span>`,
-        escapeHtml(ed.description),
-        "",
-        "Matérias:",
-        ...ed.subjects.map((s) => `  - ${escapeHtml(s)}`),
-      ].join("\n")
-    )
-    .join("\n\n");
+  const ed = education;
+  const studies = currentStudies.map(s => `- ${escapeHtml(s.title)} (${escapeHtml(s.org)})`);
+  
+  return [
+    `<span class="term-accent">${escapeHtml(ed.course)}</span>`,
+    `<span class="term-cyan">${escapeHtml(ed.institution)}</span>`,
+    escapeHtml(ed.description),
+    "",
+    "Matérias:",
+    ...ed.subjects.map((s) => `  - ${escapeHtml(s)}`),
+    "",
+    "Estudando agora:",
+    ...studies
+  ].join("\n");
 }
 
 function formatCertifications(): string {
   return certifications
     .map(
       (c) =>
-        `- ${escapeHtml(c.name)} <span class="term-muted">— ${escapeHtml(c.issuer)} (${escapeHtml(
-          c.year
+        `- ${escapeHtml(c.title)} <span class="term-muted">— ${escapeHtml(c.org)} (${escapeHtml(
+          String(c.year)
         )}, ${escapeHtml(c.hours)})</span>`
     )
     .join("\n");
 }
 
 function formatLanguages(): string {
-  return languages.map((l) => `${l.flag} ${escapeHtml(l.name)} — ${escapeHtml(l.level)}`).join("\n");
+  return languages.map((l) => `${escapeHtml(l.name)} — ${escapeHtml(l.level)}`).join("\n");
 }
 
 function formatHistory(ctx: CommandContext): string {
@@ -112,6 +109,10 @@ function formatHistory(ctx: CommandContext): string {
     return `<span class="term-muted">Nenhum comando digitado ainda nesta sessão.</span>`;
   }
   return history.map((cmd, i) => `  ${String(i + 1).padStart(3, " ")}  ${escapeHtml(cmd)}`).join("\n");
+}
+
+function formatWhoami(): string {
+  return `${escapeHtml(profile.shortName)} — ${escapeHtml(profile.roles[1].toLowerCase())} · ${escapeHtml(profile.roles[0].toLowerCase())}`;
 }
 
 function formatHelp(ctx: CommandContext): string {
@@ -150,6 +151,7 @@ function formatThemeCommand(ctx: CommandContext): string {
 
 export function createCommands(): Command[] {
   return [
+    { name: "whoami", description: "resumo em uma linha", handler: () => formatWhoami() },
     { name: "about", description: "sobre mim", handler: () => formatAbout() },
     { name: "stack", description: "minhas tecnologias", handler: () => formatStack() },
     { name: "projects", description: "meus projetos em destaque", handler: () => formatProjects() },
