@@ -204,6 +204,15 @@ export function createCommands(): Command[] {
         window.dispatchEvent(new CustomEvent('terminal-transition'));
         return `<span class="term-accent">Iniciando interface gráfica...</span>`;
       }
+    },
+    {
+      name: "exit",
+      description: "fecha a janela interativa do terminal",
+      instant: true,
+      handler: () => {
+        window.dispatchEvent(new CustomEvent('terminal-transition'));
+        return `<span class="term-accent">Fechando terminal...</span>`;
+      }
     }
   ];
 }

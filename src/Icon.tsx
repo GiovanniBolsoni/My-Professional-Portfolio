@@ -75,6 +75,12 @@ const paths = {
       <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
     </>
   ),
+  terminal: (
+    <>
+      <polyline points="4 17 10 11 4 5" />
+      <line x1="12" y1="19" x2="20" y2="19" />
+    </>
+  ),
 }
 
 export default function Icon({ name, size = 18 }: { name: keyof typeof paths; size?: number | string }) {
