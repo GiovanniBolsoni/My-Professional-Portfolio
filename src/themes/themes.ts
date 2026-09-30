@@ -80,6 +80,22 @@ export const themes: Record<string, Theme> = {
     muted: "#0a8f2f",
     selection: "#00ff4133",
   },
+  light: {
+    name: "light",
+    label: "Light (Claro)",
+    background: "#ffffff",
+    surface: "#f3f4f6",
+    surfaceHover: "#e5e7eb",
+    border: "#d1d5db",
+    foreground: "#111827",
+    fgSubtle: "#4b5563",
+    prompt: "#16a34a",
+    accent: "#000000",
+    cyan: "#0284c7",
+    error: "#ef4444",
+    muted: "#9ca3af",
+    selection: "#00000022",
+  },
 };
 
 export const defaultThemeName = "default";

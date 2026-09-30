@@ -15,10 +15,7 @@ export const Header = () => {
   }, []);
 
   const toggleTheme = () => {
-    // For now, toggle between default and a light theme if it exists, or dracula
-    // We haven't created a true light theme yet, so let's toggle between default and dracula or gruvbox.
-    // Or we can just do default and gruvbox.
-    const nextTheme = theme === 'default' ? 'dracula' : 'default';
+    const nextTheme = theme === 'default' ? 'light' : 'default';
     setTheme(nextTheme);
     applyTheme(themes[nextTheme]);
     localStorage.setItem('terminal-resume-theme', nextTheme);
