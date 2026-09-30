@@ -14,10 +14,13 @@ import { Stack } from './components/Stack/Stack';
 import { Certifications } from './components/Certifications/Certifications';
 import { Contact } from './components/Contact/Contact';
 import { BootTerminal } from './components/BootTerminal/BootTerminal';
+import { FloatingTerminalBtn } from './components/FloatingTerminalBtn/FloatingTerminalBtn';
+import { TerminalOverlay } from './components/TerminalOverlay/TerminalOverlay';
 import { applyTheme, themes, defaultThemeName } from './themes/themes';
 
 export default function App() {
   const [hasBooted, setHasBooted] = useState(false);
+  const [showOverlay, setShowOverlay] = useState(false);
 
   useEffect(() => {
     const booted = sessionStorage.getItem('portfolio-booted');
@@ -52,6 +55,7 @@ export default function App() {
   const handleTransition = () => {
     sessionStorage.setItem('portfolio-booted', 'true');
     setHasBooted(true);
+    setShowOverlay(false);
   };
 
   return (
@@ -84,6 +88,22 @@ export default function App() {
               <Certifications />
               <Contact />
             </main>
+            
+            <FloatingTerminalBtn onClick={() => setShowOverlay(true)} />
+            
+            <AnimatePresence>
+              {showOverlay && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.3 }}
+                  style={{ position: 'relative', zIndex: 10000 }}
+                >
+                  <TerminalOverlay onClose={() => setShowOverlay(false)} />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>
