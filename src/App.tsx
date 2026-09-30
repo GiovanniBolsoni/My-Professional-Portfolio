@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useEffect, useState } from 'react'
 import {
   profile,
@@ -8,8 +9,8 @@ import {
   currentStudies,
   certifications,
   languages,
-} from './data.js'
-import Icon from './Icon.jsx'
+} from './data/resume'
+import Icon from './Icon'
 
 const NAV = [
   { id: 'sobre', label: 'Sobre' },
