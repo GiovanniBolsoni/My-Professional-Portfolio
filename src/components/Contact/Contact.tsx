@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
 import styles from './Contact.module.css';
 import { profile, socials } from '../../data/resume';
 import { i18n } from '../../data/i18n';
@@ -8,6 +10,31 @@ export const Contact = () => {
   const lang = 'pt';
   const t = i18n[lang].commands;
   const [copied, setCopied] = useState(false);
+  const containerRef = useRef<HTMLElement>(null);
+
+  useGSAP(() => {
+    gsap.from('.contact-left', {
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: 'top 80%',
+      },
+      x: -50,
+      opacity: 0,
+      duration: 0.6,
+      ease: 'power2.out'
+    });
+
+    gsap.from('.contact-right', {
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: 'top 80%',
+      },
+      x: 50,
+      opacity: 0,
+      duration: 0.6,
+      ease: 'power2.out'
+    });
+  }, { scope: containerRef });
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(profile.email);
@@ -16,14 +43,14 @@ export const Contact = () => {
   };
 
   return (
-    <section className={styles.contact} id="contact">
+    <section className={styles.contact} id="contact" ref={containerRef}>
       <div className={styles.container}>
         <h2 className={styles.title}>
           <span className={styles.prompt}>&gt;</span> {t.contact}
         </h2>
         
         <div className={styles.content}>
-          <div className={styles.info}>
+          <div className={`${styles.info} contact-left`}>
             <p className={styles.description}>
               Estou aberto a novas oportunidades e conexões. Sinta-se à vontade para entrar em contato!
             </p>
@@ -36,14 +63,13 @@ export const Contact = () => {
             <div className={styles.socials}>
               {socials.map((social, idx) => (
                 <a key={idx} href={social.href} target="_blank" rel="noreferrer" className={styles.socialLink}>
-                  {/* Assuming Icon handles specific social icons if available, else just text for now */}
                   <span className={styles.socialLabel}>{social.label}</span>
                 </a>
               ))}
             </div>
           </div>
           
-          <div className={styles.terminalFinal}>
+          <div className={`${styles.terminalFinal} contact-right`}>
             <div className={styles.termHeader}>
               <span className={styles.dot}></span>
               <span className={styles.dot}></span>

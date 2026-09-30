@@ -1,5 +1,10 @@
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import Lenis from 'lenis';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 import { Header } from './components/Header/Header';
 import { Hero } from './components/Hero/Hero';
 import { About } from './components/About/About';
@@ -15,9 +20,6 @@ export default function App() {
   const [hasBooted, setHasBooted] = useState(false);
 
   useEffect(() => {
-    // We check if the user previously booted to avoid showing the terminal on every reload?
-    // Actually, maybe we want to show it every time for the effect, or use sessionStorage.
-    // Let's use sessionStorage so it only shows once per tab session.
     const booted = sessionStorage.getItem('portfolio-booted');
     if (booted) {
       setHasBooted(true);
@@ -25,6 +27,26 @@ export default function App() {
     } else {
       applyTheme(themes[defaultThemeName]);
     }
+
+    // Setup smooth scroll and GSAP sync
+    const lenis = new Lenis({
+      lerp: 0.1,
+      smoothWheel: true,
+    });
+
+    lenis.on('scroll', ScrollTrigger.update);
+
+    const raf = (time: number) => {
+      lenis.raf(time * 1000);
+    };
+
+    gsap.ticker.add(raf);
+    gsap.ticker.lagSmoothing(0);
+
+    return () => {
+      gsap.ticker.remove(raf);
+      lenis.destroy();
+    };
   }, []);
 
   const handleTransition = () => {
