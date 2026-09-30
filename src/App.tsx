@@ -10,6 +10,7 @@ import { Hero } from './components/Hero/Hero';
 import { About } from './components/About/About';
 import { Projects } from './components/Projects/Projects';
 import { CommandPalette } from './components/CommandPalette/CommandPalette';
+import { Footer } from './components/Footer/Footer';
 
 import { Contact } from './components/Contact/Contact';
 import { BootTerminal } from './components/BootTerminal/BootTerminal';
@@ -87,6 +88,7 @@ export default function App() {
               <Contact />
             </main>
             
+            <Footer />
             <CommandPalette />
             <FloatingTerminalBtn onClick={() => setShowOverlay(true)} />
             
