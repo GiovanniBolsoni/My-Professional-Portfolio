@@ -62,7 +62,14 @@ export const Contact = () => {
 
             <div className={styles.socials}>
               {socials.map((social, idx) => (
-                <a key={idx} href={social.href} target="_blank" rel="noreferrer" className={styles.socialLink}>
+                <a 
+                  key={idx} 
+                  href={social.href} 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className={styles.socialLink}
+                  aria-label={`Acessar meu ${social.label}`}
+                >
                   <span className={styles.socialLabel}>{social.label}</span>
                 </a>
               ))}

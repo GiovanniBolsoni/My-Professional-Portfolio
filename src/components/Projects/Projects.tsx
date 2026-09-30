@@ -34,7 +34,14 @@ export const Projects = () => {
         
         <div className={styles.grid}>
           {projects.map((proj, idx) => (
-            <a href={proj.url} target="_blank" rel="noreferrer" key={idx} className={`${styles.card} proj-card`}>
+            <a 
+              href={proj.url} 
+              target="_blank" 
+              rel="noreferrer" 
+              key={idx} 
+              className={`${styles.card} proj-card`}
+              aria-label={`Visualizar projeto ${proj.title} no GitHub`}
+            >
               <div className={styles.cardHeader}>
                 <Icon name="github" size={24} />
                 <Icon name="arrow" size={20} />
