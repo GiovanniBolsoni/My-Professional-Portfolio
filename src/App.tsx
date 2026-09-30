@@ -17,6 +17,7 @@ import { BootTerminal } from './components/BootTerminal/BootTerminal';
 import { FloatingTerminalBtn } from './components/FloatingTerminalBtn/FloatingTerminalBtn';
 import { TerminalOverlay } from './components/TerminalOverlay/TerminalOverlay';
 import { applyTheme, themes, defaultThemeName } from './themes/themes';
+import styles from './App.module.css';
 
 export default function App() {
   const [hasBooted, setHasBooted] = useState(false);
@@ -59,7 +60,7 @@ export default function App() {
   };
 
   return (
-    <>
+    <div className={styles.appShell}>
       <AnimatePresence mode="wait">
         {!hasBooted ? (
           <motion.div
@@ -74,6 +75,7 @@ export default function App() {
         ) : (
           <motion.div
             key="gui"
+            className={styles.mainContent}
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
@@ -107,6 +109,6 @@ export default function App() {
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </div>
   );
 }
