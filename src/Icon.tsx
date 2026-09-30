@@ -77,7 +77,7 @@ const paths = {
   ),
 }
 
-export default function Icon({ name, size = 18 }) {
+export default function Icon({ name, size = 18 }: { name: keyof typeof paths; size?: number | string }) {
   return (
     <svg
       className="icon"

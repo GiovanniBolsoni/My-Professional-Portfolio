@@ -1,0 +1,29 @@
+:root {
+  /* Fallback to default theme if JS fails/loads late */
+  --bg: #0c0c0c;
+  --fg: #e6e6e6;
+  --prompt: #4ade80;
+  --accent: #4ade80;
+  --cyan: #22d3ee;
+  --error: #f87171;
+  --muted: #8b8b8b;
+  --selection: #4ade8055;
+
+  /* Global typography and spacing tokens */
+  --font-mono: 'Courier New', Courier, monospace;
+  --font-sans: system-ui, -apple-system, sans-serif;
+  
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+::selection {
+  background-color: var(--selection);
+}

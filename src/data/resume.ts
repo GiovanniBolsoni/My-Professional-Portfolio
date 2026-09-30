@@ -1,37 +1,103 @@
-// Conteúdo do portfólio — extraído da página "Professional Portfolio" no Notion.
-// Para atualizar o site, basta editar este arquivo.
+export const hostname = "giovanni";
 
-export const profile = {
+export interface Profile {
+  name: string;
+  shortName: string;
+  roles: string[];
+  location: string;
+  email: string;
+  photo: string;
+  resumePdf: string;
+  objective: string;
+  summary: string[];
+}
+
+export interface Social {
+  label: string;
+  href: string;
+  icon: string;
+}
+
+export interface SkillGroup {
+  group: string;
+  items: string[];
+}
+
+export interface Experience {
+  company: string;
+  role: string;
+  period: string;
+  tags: string[];
+  bullets: string[];
+}
+
+export interface Education {
+  course: string;
+  institution: string;
+  status: string;
+  description: string;
+  subjects: string[];
+}
+
+export interface Study {
+  title: string;
+  org: string;
+}
+
+export interface Certification {
+  title: string;
+  org: string;
+  year: number;
+  hours: string;
+  category: string;
+  description: string;
+}
+
+export interface Language {
+  name: string;
+  level: string;
+  value: number;
+}
+
+export interface Project {
+  title: string;
+  description: string;
+  tech: string;
+  url: string;
+}
+
+export const profile: Profile = {
   name: 'Giovanni Bolsoni Fernandes',
   shortName: 'Giovanni Bolsoni',
   roles: ['Desenvolvedor Full Stack em Progresso', 'Suporte Técnico', 'Analista de Sistemas'],
   location: 'São Paulo, SP',
   email: 'giovannibolsoni502@gmail.com',
   photo: '/profile.jpg',
+  resumePdf: 'https://drive.google.com/file/d/1R_atrtgxYFmYXBWWv-8B-2dwGwDFLDrX/view?usp=sharing',
   objective: 'Analista de Sistemas, Suporte Técnico ou Desenvolvedor Web Front-end',
   summary: [
     'Comecei minha carreira em suporte técnico e atendimento, onde passei mais de 2 anos resolvendo incidentes sob SLA, documentando soluções via metodologia KCS e sendo o elo entre times técnicos e clientes. Foi ali que desenvolvi raciocínio analítico e visão de negócio.',
     'Hoje aplico essa mesma lógica de resolução de problemas para me tornar um futuro desenvolvedor Full-Stack, construindo interfaces com React, JavaScript, HTML5, CSS3 e Python, unindo base técnica sólida a uma postura organizada e orientada a resultado.',
   ],
-}
+};
 
-export const socials = [
+export const socials: Social[] = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/giovanni-bolsoni/', icon: 'linkedin' },
   { label: 'GitHub', href: 'https://github.com/GiovanniBolsoni', icon: 'github' },
   { label: 'Instagram', href: 'https://www.instagram.com/_bolsoni_/', icon: 'instagram' },
-]
+];
 
-export const skills = [
-  { group: 'Linguagens', items: ['HTML', 'CSS', 'JavaScript', 'Python'] },
+export const skills: SkillGroup[] = [
+  { group: 'Linguagens', items: ['HTML', 'CSS', 'JavaScript', 'Python', 'TypeScript'] },
   { group: 'Frameworks', items: ['React', 'Bootstrap', 'Flask'] },
   { group: 'Build & Hosting', items: ['Vite', 'Vercel', 'GitHub'] },
   { group: 'Dados & Cloud', items: ['Supabase', 'AWS Cloud Practitioner'] },
   { group: 'Versionamento', items: ['Git', 'GitHub'] },
   { group: 'Produtividade', items: ['Microsoft Office', 'Notion', 'Jupyter'] },
   { group: 'Ambiente', items: ['VS Code', 'Windows', 'Claude Code', 'Antigravity'] },
-]
+];
 
-export const experiences = [
+export const experiences: Experience[] = [
   {
     company: 'Linx Stone Co Tecnologia e Varejo',
     role: 'Operador de Suporte de Hardware/Software e Redes',
@@ -60,9 +126,9 @@ export const experiences = [
       'Fotografia de veículos para anúncios e redes sociais, e relatórios de condição para apoiar decisões gerenciais.',
     ],
   },
-]
+];
 
-export const education = {
+export const education: Education = {
   course: 'Análise e Desenvolvimento de Sistemas (ADS)',
   institution: 'Universidade São Judas Tadeu',
   status: 'Concluída',
@@ -76,14 +142,14 @@ export const education = {
     'Usabilidade, Desenvolvimento Web, Mobile e Jogos',
     'Sistemas Distribuídos e Mobile',
   ],
-}
+};
 
-export const currentStudies = [
+export const currentStudies: Study[] = [
   { title: 'Python com Framework', org: 'SENAI' },
   { title: 'Desenvolvimento de Aplicações com IA Generativa utilizando Google Antigravity', org: 'SENAI' },
-]
+];
 
-export const certifications = [
+export const certifications: Certification[] = [
   {
     title: 'AWS Cloud Quest: Praticante de IA Generativa',
     org: 'AWS',
@@ -188,10 +254,37 @@ export const certifications = [
     category: 'Fundamentos',
     description: 'Windows e Pacote Office (Word, Excel e PowerPoint) para produtividade no ambiente profissional.',
   },
-]
+];
 
-export const languages = [
+export const languages: Language[] = [
   { name: 'Português', level: 'Nativo / Fluente', value: 100 },
   { name: 'Inglês', level: 'Intermediário', value: 60 },
   { name: 'Italiano', level: 'Básico', value: 25 },
-]
+];
+
+export const projects: Project[] = [
+  {
+    title: 'Femanic&Co',
+    description: 'Sistema para tornar a compra de roupas mais inteligente e segura para o público-alvo.',
+    tech: 'JavaScript',
+    url: 'https://github.com/GiovanniBolsoni/Femanic-Co'
+  },
+  {
+    title: 'SENAI JavaScript',
+    description: 'Curso de Aperfeiçoamento Profissional em Desenvolvimento JavaScript.',
+    tech: 'JavaScript',
+    url: 'https://github.com/GiovanniBolsoni/SENAI_JavaScript'
+  },
+  {
+    title: 'SENAI AWS Cloud Practitioner 2026',
+    description: 'Repositório de acompanhamento do curso AWS Cloud Practitioner.',
+    tech: 'AWS',
+    url: 'https://github.com/GiovanniBolsoni/SENAI_AWS-cloud-practitioner-2026'
+  },
+  {
+    title: 'Career-OS',
+    description: 'App com IA para jovens de tech e dados no Brasil organizarem candidaturas em Kanban, simularem entrevistas, otimizarem o currículo e receberem insights semanais.',
+    tech: 'TypeScript',
+    url: 'https://github.com/GiovanniBolsoni/Career-Os'
+  }
+];
