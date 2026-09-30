@@ -1,16 +1,16 @@
 import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import { Command, ChevronDown } from 'lucide-react';
 import styles from './Hero.module.css';
 import { profile } from '../../data/resume';
-import { i18n } from '../../data/i18n';
 
 export const Hero = () => {
-  const lang = 'pt';
-  const t = i18n[lang].hero;
   const containerRef = useRef<HTMLElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
+    // Reveal animation
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
@@ -19,34 +19,50 @@ export const Hero = () => {
     });
 
     tl.from('.hero-elem', {
-      y: 50,
+      y: 40,
       opacity: 0,
-      duration: 0.8,
-      stagger: 0.2,
+      duration: 1,
+      stagger: 0.15,
       ease: 'power3.out'
+    });
+
+    // Parallax effect on scroll
+    gsap.to(textRef.current, {
+      y: 100,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: 'top top',
+        end: 'bottom top',
+        scrub: true
+      }
     });
   }, { scope: containerRef });
 
   return (
     <section className={styles.hero} id="hero" ref={containerRef}>
-      <div className={styles.container}>
-        <div className={styles.content}>
-          <p className={`${styles.greeting} hero-elem`}>$ whoami</p>
-          <h1 className={`${styles.name} hero-elem`}>{profile.name}</h1>
-          <h2 className={`${styles.role} hero-elem`}>{profile.roles[0]}</h2>
-          
-          <div className={`${styles.actions} hero-elem`}>
-            <a href={profile.resumePdf} target="_blank" rel="noreferrer" className={styles.btnPrimary}>
-              {t.downloadCV}
-            </a>
-            <a href="#contact" className={styles.btnSecondary}>
-              {t.contactMe}
-            </a>
-          </div>
-        </div>
-        <div className={`${styles.imageWrapper} hero-elem`}>
-          <img src={profile.photo} alt={profile.name} className={styles.photo} />
-          <div className={styles.glitchBox}></div>
+      <div className={styles.heroBg}></div>
+      <div className={styles.container} ref={textRef}>
+        <p className={`${styles.greeting} hero-elem`}>Olá, visitante. Eu sou</p>
+        <h1 className={`${styles.name} hero-elem`}>
+          {profile.name}
+        </h1>
+        <h2 className={`${styles.role} hero-elem`}>
+          {profile.roles.join(' & ')}
+        </h2>
+        <p className={`${styles.description} hero-elem`}>
+          {profile.objective}
+        </p>
+        
+        <div className={`${styles.actions} hero-elem`}>
+          <a href="#about" className={styles.btnPrimary}>
+            Explorar a Interface
+            <ChevronDown size={18} />
+          </a>
+          <button className={styles.btnSecondary} aria-label="Abrir Command Palette">
+            <Command size={18} />
+            <span>Menu Rápido (⌘K)</span>
+          </button>
         </div>
       </div>
     </section>
