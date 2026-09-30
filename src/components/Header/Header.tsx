@@ -21,6 +21,16 @@ export const Header = () => {
     localStorage.setItem('terminal-resume-theme', nextTheme);
   };
 
+  useEffect(() => {
+    const handleToggle = () => toggleTheme();
+    window.addEventListener('toggle-theme', handleToggle);
+    return () => window.removeEventListener('toggle-theme', handleToggle);
+  }, [theme]);
+
+  const openCommandPalette = () => {
+    window.dispatchEvent(new Event('open-command-palette'));
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -34,7 +44,7 @@ export const Header = () => {
             <a href="#contact">{t.contact}</a>
           </nav>
           
-          <button className={styles.cmdBtn} aria-label="Command Palette">
+          <button className={styles.cmdBtn} onClick={openCommandPalette} aria-label="Command Palette">
             <Command size={16} />
             <span>⌘K</span>
           </button>
