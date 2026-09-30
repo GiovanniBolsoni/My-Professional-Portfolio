@@ -1,16 +1,18 @@
 // @ts-nocheck
 import {
-  about,
-  stack,
+  profile,
+  skills as stack,
   projects,
-  social,
-  resumeLink,
-  email,
-  experience,
+  socials as social,
+  experiences as experience,
   education,
   certifications,
   languages,
-} from "../data/resumeData";
+} from "../data/resume";
+
+const about = profile.objective + "\n" + profile.summary.join("\n");
+const resumeLink = profile.resumePdf;
+const email = profile.email;
 import type { Command, CommandContext } from "./types";
 import { escapeHtml, linkify, renderJsonBlock } from "./utils";
 
@@ -194,5 +196,14 @@ export function createCommands(): Command[] {
       description: "tenta virar root (boa sorte)",
       handler: () => `<span class="term-error">Bonita tentativa, mas aqui você não é root 😄</span>`,
     },
+    {
+      name: "start",
+      description: "inicia a interface gráfica (landing page)",
+      instant: true,
+      handler: () => {
+        window.dispatchEvent(new CustomEvent('terminal-transition'));
+        return `<span class="term-accent">Iniciando interface gráfica...</span>`;
+      }
+    }
   ];
 }
