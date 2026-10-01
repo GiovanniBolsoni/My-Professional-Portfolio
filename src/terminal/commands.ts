@@ -206,35 +206,103 @@ export function createCommands(): Command[] {
         ctx.terminal.hideInput();
         ctx.terminal.clearOutput();
         
-        function renderSkull(): string {
-          return `
-            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 40px;">
-              <pre style="color: #ff003c; font-size: 1.2rem; line-height: 1.1; margin: 0; text-shadow: 2px 0 #00fff9, -2px 0 #ffff00;">
-                                        
-                ████████                
-              ████████████              
-            ████████████████            
-            ████  ████  ████            
-            ████████████████            
-              ██  ████  ██              
-                ████████                
-                                        
-              </pre>
-              <div style="color: #ff003c; font-weight: bold; margin-top: 20px; font-size: 1.2rem; letter-spacing: 2px;">SYSTEM COMPROMISED</div>
-            </div>
-          `;
-        }
+        const skullFrames = [
+`    ███                                  ███    
+  ███████                              ███████  
+   ████████          ████████          ████████ 
+     ██████        ████████████        ██████   
+       ████      ████████████████      ████     
+                 ████  ████  ████               
+                 ████████████████               
+                   ██  ████  ██                 
+       ████          ████████          ████     
+     ██████        ████████████        ██████   
+   ████████          ████████          ████████ 
+  ███████                              ███████  
+    ███                                  ███    `,
+
+`    ███                                  ███    
+  ███████                              ███████  
+   ████████          ████████          ████████ 
+     ██████        ████████████        ██████   
+       ████      ████████████████      ████     
+                 ████  ████  ████               
+                 ████████████████               
+                   ██        ██                 
+       ████          ████████          ████     
+     ██████        ████████████        ██████   
+   ████████          ████████          ████████ 
+  ███████                              ███████  
+    ███                                  ███    `,
+
+`    ███                                  ███    
+  ███████                              ███████  
+   ████████          ████████          ████████ 
+     ██████        ████████████        ██████   
+       ████      ████████████████      ████     
+                 ████  ████  ████               
+                 ████████████████               
+                   ██   HA   ██                 
+       ████          ████████          ████     
+     ██████        ████████████        ██████   
+   ████████          ████████          ████████ 
+  ███████                              ███████  
+    ███                                  ███    `,
+
+`    ███                                  ███    
+  ███████                              ███████  
+   ████████          ████████          ████████ 
+     ██████        ████████████        ██████   
+       ████      ████████████████      ████     
+                 ████  ████  ████               
+                 ████████████████               
+                   ██        ██                 
+       ████         HA      HA         ████     
+     ██████        ████████████        ██████   
+   ████████          ████████          ████████ 
+  ███████                              ███████  
+    ███                                  ███    `,
+
+`    ███                                  ███    
+  ███████                              ███████  
+   ████████          ████████          ████████ 
+     ██████        ████████████        ██████   
+       ████      ████████████████      ████     
+                 ████  ████  ████               
+                 ████████████████               
+                   ██   HA   ██                 
+       ████         HA      HA         ████     
+     ██████    HA  ████████████  HA    ██████   
+   ████████          ████████          ████████ 
+  ███████                              ███████  
+    ███                                  ███    `
+        ];
+
+        const initialHtml = `
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 20px;">
+            <pre id="skull-anim" style="color: #ff003c; font-size: clamp(0.7rem, 2vw, 1.2rem); line-height: 1.1; margin: 0; text-shadow: 2px 0 #00fff9, -2px 0 #ffff00; font-family: monospace; white-space: pre;">${skullFrames[0]}</pre>
+            <div style="color: #ff003c; font-weight: bold; margin-top: 20px; font-size: 1.2rem; letter-spacing: 2px;">SYSTEM COMPROMISED</div>
+          </div>
+        `;
+        
+        ctx.terminal.print(initialHtml);
 
         const delay = (ms: number) => new Promise(r => setTimeout(r, ms));
         
-        // Print the skull
-        ctx.terminal.print(renderSkull());
-        
-        // Glitch effect (colors inverting, etc)
         document.body.classList.add('glitch-active');
         
-        // Wait a bit to let the user see the "hack"
-        await delay(1200);
+        const pre = document.getElementById('skull-anim');
+        
+        if (pre) {
+          // Animação dos frames
+          for (let i = 0; i < skullFrames.length; i++) {
+            pre.textContent = skullFrames[i];
+            await delay(200);
+          }
+        }
+        
+        // Espera no final
+        await delay(1000);
         
         window.dispatchEvent(new CustomEvent('terminal-transition'));
         setTimeout(() => document.body.classList.remove('glitch-active'), 500);
