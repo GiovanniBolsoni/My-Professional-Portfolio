@@ -45,5 +45,5 @@ export function renderAsciiBanner(text: string, letterGap = 2): string {
     }
   });
 
-  return rows.join("\n");
+  return rows.join("\n").replace(/#/g, "█");
 }
