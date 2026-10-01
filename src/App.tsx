@@ -65,9 +65,9 @@ export default function App() {
         {!hasBooted ? (
           <motion.div
             key="terminal"
-            initial={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -50, scale: 0.95 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
+            initial={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, scale: 1.1, filter: 'blur(10px)' }}
+            transition={{ duration: 0.3, ease: "easeIn" }}
             style={{ position: 'fixed', inset: 0, zIndex: 9999 }}
           >
             <BootTerminal onTransition={handleTransition} />
