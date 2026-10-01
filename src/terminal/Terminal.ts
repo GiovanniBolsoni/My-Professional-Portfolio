@@ -312,6 +312,12 @@ export class Terminal {
     this.outputEl.innerHTML = "";
   }
 
+  hideInput(): void {
+    if (this.inputEl.parentElement) {
+      this.inputEl.parentElement.style.display = 'none';
+    }
+  }
+
   reload(): void {
     window.location.reload();
   }
