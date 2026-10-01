@@ -17,16 +17,27 @@ import { BootTerminal } from './components/BootTerminal/BootTerminal';
 import { FloatingTerminalBtn } from './components/FloatingTerminalBtn/FloatingTerminalBtn';
 import { TerminalOverlay } from './components/TerminalOverlay/TerminalOverlay';
 import { applyTheme, themes, defaultThemeName } from './themes/themes';
+import { NavTransitionOverlay } from './components/NavTransitionOverlay/NavTransitionOverlay';
+import { NetworkBackground } from './components/NetworkBackground/NetworkBackground';
+import { CustomCursor } from './components/CustomCursor/CustomCursor';
+import { useKonamiCode } from './hooks/useKonamiCode';
 import styles from './App.module.css';
 
 export default function App() {
-  const [hasBooted, setHasBooted] = useState(false);
+  const [hasBooted, setHasBooted] = useState(() => {
+    return !!sessionStorage.getItem('portfolio-booted');
+  });
   const [showOverlay, setShowOverlay] = useState(false);
+  const { isUnlocked, resetKonami } = useKonamiCode();
 
   useEffect(() => {
-    const booted = sessionStorage.getItem('portfolio-booted');
-    if (booted) {
-      setHasBooted(true);
+    if (isUnlocked) {
+      window.dispatchEvent(new CustomEvent('set-theme', { detail: { themeName: 'verde-matrix' } }));
+    }
+  }, [isUnlocked]);
+
+  useEffect(() => {
+    if (hasBooted) {
       applyTheme(themes[localStorage.getItem('terminal-resume-theme') || defaultThemeName] || themes[defaultThemeName]);
     } else {
       applyTheme(themes[defaultThemeName]);
@@ -47,6 +58,40 @@ export default function App() {
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
 
+    // Easter egg for developers
+    const easterEgg = `
+  ███████████████████████████
+  ███████▀▀▀      ▀▀▀███████
+  ████▀                 ▀████
+  ███│                   │███
+  ██▌│                   │▐██
+  ██ └┐                 ┌┘ ██
+  ██  └┐               ┌┘  ██
+  ██  ┌┘▄▄▄▄▄     ▄▄▄▄▄└┐  ██
+  ██▌ │██████▌   ▐██████│ ▐██
+  ███ │▐███▀▀  ▄  ▀▀███▌│ ███
+  ██▀─┘       ▐█▌       └─▀██
+  ██▄   ▄▄▄▓  ▀█▀  ▓▄▄▄   ▄██
+  ████▄─┘██▌       ▐██└─▄████
+  █████▌ ▐█▌       ▐█▌ ▐█████
+  ██████  ▀▀       ▀▀  ██████
+  ███████             ███████
+  
+  [!] ACESSO NÃO AUTORIZADO DETECTADO [!]
+  
+  Ah, vejo que você é um desenvolvedor explorando o código-fonte...
+  Gosta de olhar por baixo do capô, não é?
+  
+  Que tal pularmos a etapa do RH e falarmos direto de tecnologia?
+  Me mande um email e vamos conversar: giovani.soares@example.com
+  `;
+    
+    // Only print once
+    if (!window.hasOwnProperty('easterEggPrinted')) {
+      console.log('%c' + easterEgg, 'color: #00ff00; font-family: monospace; font-size: 12px; font-weight: bold; text-shadow: 0 0 5px #00ff00;');
+      (window as any).easterEggPrinted = true;
+    }
+
     return () => {
       gsap.ticker.remove(raf);
       lenis.destroy();
@@ -61,6 +106,10 @@ export default function App() {
 
   return (
     <div className={styles.appShell}>
+      <NetworkBackground />
+      <CustomCursor />
+      <NavTransitionOverlay />
+      <div className={styles.noiseOverlay}></div>
       <AnimatePresence mode="wait">
         {!hasBooted ? (
           <motion.div
@@ -102,6 +151,24 @@ export default function App() {
                   style={{ position: 'relative', zIndex: 10000 }}
                 >
                   <TerminalOverlay onClose={() => setShowOverlay(false)} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+              {isUnlocked && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 1.1 }}
+                  className={styles.konamiOverlay}
+                  onClick={resetKonami}
+                >
+                  <div className={styles.konamiContent}>
+                    <h2>SYSTEM OVERRIDE</h2>
+                    <p>Konami Code Aceito. Modo Matrix Ativado.</p>
+                    <button onClick={resetKonami}>[ RETORNAR ]</button>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>

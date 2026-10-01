@@ -1,13 +1,30 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { Award, Briefcase, Code2 } from 'lucide-react';
+import { Award, Briefcase, Code2, Cloud } from 'lucide-react';
 import styles from './About.module.css';
 import { profile, skills, certifications, experiences } from '../../data/resume';
+import { useScrambleText } from '../../hooks/useScrambleText';
 
 export const About = () => {
   const containerRef = useRef<HTMLElement>(null);
   const [activeTab, setActiveTab] = useState<'journey' | 'stack' | 'certs'>('journey');
+  const [isTitleVisible, setIsTitleVisible] = useState(false);
+  const titleRef = useScrambleText('sobre_mim', isTitleVisible, { speed: 30, delay: 0 });
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsTitleVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    if (containerRef.current) observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   useGSAP(() => {
     gsap.from('.about-elem', {
@@ -30,7 +47,7 @@ export const About = () => {
           {/* Coluna Esquerda: Texto e Stats */}
           <div className={styles.leftCol}>
             <h2 className={`${styles.title} about-elem`}>
-              <span className={styles.prompt}>~/</span> sobre_mim
+              <span className={styles.prompt}>~/</span> <span ref={titleRef as any}>sobre_mim</span>
             </h2>
             
             <div className={`${styles.textBlock} about-elem`}>
@@ -115,7 +132,11 @@ export const About = () => {
                 <div className={styles.certList}>
                   {certifications.map((cert, idx) => (
                     <div key={idx} className={styles.certCard}>
-                      <Award className={styles.certIcon} size={20} />
+                      {cert.org.includes('AWS') ? (
+                        <Cloud className={`${styles.certIcon} ${styles.awsIcon}`} size={20} />
+                      ) : (
+                        <Award className={styles.certIcon} size={20} />
+                      )}
                       <div>
                         <h4 className={styles.certName}>{cert.title}</h4>
                         <p className={styles.certIssuer}>{cert.org} <span className={styles.certYear}>({cert.year})</span></p>

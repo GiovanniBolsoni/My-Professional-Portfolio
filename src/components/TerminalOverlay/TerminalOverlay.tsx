@@ -13,7 +13,7 @@ export const TerminalOverlay = ({ onClose }: TerminalOverlayProps) => {
 
   useEffect(() => {
     if (terminalRef.current && !terminalInstance.current) {
-      terminalInstance.current = new Terminal(terminalRef.current);
+      terminalInstance.current = new Terminal(terminalRef.current, { withTopBar: false });
     }
 
     const handleTransition = () => {

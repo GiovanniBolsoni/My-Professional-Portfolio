@@ -27,18 +27,38 @@
 }
 
 .card {
-  background-color: var(--surface);
-  border: 1px solid var(--border);
+  background-color: rgba(20, 20, 20, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 255, 0, 0.1);
   border-radius: 12px;
   overflow: hidden;
-  transition: transform var(--transition-normal), border-color var(--transition-normal);
   display: flex;
   flex-direction: column;
+  position: relative;
+  will-change: transform;
+}
+
+.reflection {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    800px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+    rgba(255, 255, 255, 0.06),
+    transparent 40%
+  );
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover .reflection {
+  opacity: 1;
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  border-color: var(--accent);
+  border-color: rgba(0, 255, 0, 0.4);
 }
 
 .imagePlaceholder {
@@ -49,17 +69,30 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  border-bottom: 1px solid var(--border);
 }
 
-.imagePlaceholder span {
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
+.placeholderIcon {
   color: var(--muted);
   transition: transform var(--transition-normal);
 }
 
-.card:hover .imagePlaceholder span {
-  transform: scale(1.05);
+.card:hover .placeholderIcon {
+  transform: scale(1.1);
+  color: var(--accent);
+}
+
+.imageContainer {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-size: cover;
+  background-position: center;
+  border-bottom: 1px solid var(--border);
+  transition: transform var(--transition-normal);
+}
+
+.card:hover .imageContainer {
+  transform: scale(1.02);
 }
 
 .content {
@@ -69,12 +102,30 @@
   flex: 1;
 }
 
+.titleWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+}
+
 .projectName {
   font-family: var(--font-sans);
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--fg);
-  margin-bottom: var(--space-2);
+}
+
+.highlightBadge {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: bold;
+  background-color: rgba(var(--accent-rgb, 0,255,255), 0.1);
+  color: var(--accent);
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(var(--accent-rgb, 0,255,255), 0.3);
+  text-transform: uppercase;
 }
 
 .description {
