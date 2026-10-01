@@ -5,6 +5,7 @@ import { createCommands } from "./commands";
 import type { Command } from "./types";
 import { escapeHtml } from "./utils";
 import { renderAsciiBanner } from "./asciiFont";
+import { playTypingSound } from "../utils/sound";
 
 const THEME_STORAGE_KEY = "terminal-resume-theme";
 const TYPE_SPEED_MS = 1;
@@ -20,8 +21,13 @@ function htmlToPlainText(html: string): string {
   return tmp.textContent ?? "";
 }
 
+export interface TerminalOptions {
+  withTopBar?: boolean;
+}
+
 export class Terminal {
   private root: HTMLElement;
+  private options: TerminalOptions;
   private outputEl!: HTMLDivElement;
   private inputEl!: HTMLInputElement;
   private commands: Command[];
@@ -32,8 +38,9 @@ export class Terminal {
   private isAnimating = false;
   private skipRequested = false;
 
-  constructor(root: HTMLElement) {
+  constructor(root: HTMLElement, options: TerminalOptions = { withTopBar: true }) {
     this.root = root;
+    this.options = options;
     this.commands = createCommands();
     this.theme = themes[this.loadSavedTheme()] ?? themes[defaultThemeName];
     applyTheme(this.theme);
@@ -48,6 +55,10 @@ export class Terminal {
   private buildDom(): void {
     this.root.innerHTML = "";
     this.root.classList.add("terminal");
+
+    const topBar = document.createElement("div");
+    topBar.className = "terminal-top-bar";
+    topBar.innerHTML = `<div class="term-mac-btns"><span class="mac-close"></span><span class="mac-min"></span><span class="mac-max"></span></div><div class="term-title">GIOVANNI@PORTFOLIO ~ /sys/guest</div>`;
 
     const output = document.createElement("div");
     output.className = "terminal-output";
@@ -71,6 +82,9 @@ export class Terminal {
     inputLine.appendChild(prompt);
     inputLine.appendChild(input);
 
+    if (this.options.withTopBar) {
+      this.root.appendChild(topBar);
+    }
     this.root.appendChild(output);
     this.root.appendChild(inputLine);
 
@@ -103,6 +117,27 @@ export class Terminal {
   }
 
   private async boot(): Promise<void> {
+    this.inputEl.readOnly = true;
+    this.hideInput();
+    
+    const bootSequence = [
+      "Carregando kernel virtual...",
+      "Inicializando módulos de memória... <span class='term-cyan'>[OK]</span>",
+      "Conectando ao servidor principal... <span class='term-cyan'>[OK]</span>",
+      "Verificando credenciais de acesso... <span class='term-accent'>[VISITANTE]</span>",
+      "Iniciando interface de linha de comando..."
+    ];
+    
+    for (const line of bootSequence) {
+      await this.typeLine(`<span class="term-muted">${line}</span>`);
+      await delay(200);
+    }
+    this.print("");
+    
+    if (this.inputEl.parentElement) {
+      this.inputEl.parentElement.style.display = '';
+    }
+    this.inputEl.readOnly = false;
     this.inputEl.focus();
     await this.printAnimated(this.getBannerHtml());
   }
@@ -122,15 +157,10 @@ export class Terminal {
   private _bannerHtml: string | null = null;
 
   private buildBannerHtml(): string {
-    const art = renderAsciiBanner("SAUDAÇÕES 🖖");
-    const artLines = art
-      .split("\n")
-      .map((line: string) => `<span class="banner-art">${escapeHtml(line)}</span>`)
-      .join("\n");
     return [
-      artLines,
+      `<span class="term-accent" style="font-size: 1.5em; font-weight: bold; text-shadow: 0 0 5px var(--accent);">Olá, seja bem vindo(a)!</span>`,
       "",
-      `<span class="term-accent">Bem-vindo(a) ao meu terminal!</span> Digite <span class="term-cyan">help</span> para ver os comandos.`,
+      `Digite <span class="term-cyan">help</span> para ver os comandos.`,
       `Para acessar a interface gráfica, digite <span class="term-cyan">start</span>.`
     ].join("\n");
   }
@@ -292,9 +322,10 @@ export class Terminal {
     this.outputEl.appendChild(div);
 
     const plain = htmlToPlainText(line);
-    const charsPerTick = 5; // Imprime 5 caracteres por vez para ser mais fluido e rápido
+    const charsPerTick = 25; // Imprime mais caracteres por vez para ser bem mais rapido
     for (let i = 0; i < plain.length; i += charsPerTick) {
       if (this.skipRequested) break;
+      playTypingSound();
       div.textContent = plain.slice(0, i + charsPerTick);
       this.scrollToBottom();
       await delay(TYPE_SPEED_MS);

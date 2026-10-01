@@ -64,20 +64,21 @@ export interface Project {
   description: string;
   tech: string;
   url: string;
+  image?: string;
 }
 
 export const profile: Profile = {
   name: 'Giovanni Bolsoni Fernandes',
   shortName: 'Giovanni Bolsoni',
-  roles: ['Desenvolvedor Full Stack em Progresso', 'Suporte Técnico', 'Analista de Sistemas'],
+  roles: ['Ex-especialista de Suporte Técnico construindo interfaces de alto desempenho.'],
   location: 'São Paulo, SP',
   email: 'giovannibolsoni502@gmail.com',
   photo: '/profile.jpg',
   resumePdf: 'https://drive.google.com/file/d/1R_atrtgxYFmYXBWWv-8B-2dwGwDFLDrX/view?usp=sharing',
   objective: 'Analista de Sistemas, Suporte Técnico ou Desenvolvedor Web Front-end',
   summary: [
-    'Comecei minha carreira em suporte técnico e atendimento, onde passei mais de 2 anos resolvendo incidentes sob SLA, documentando soluções via metodologia KCS e sendo o elo entre times técnicos e clientes. Foi ali que desenvolvi raciocínio analítico e visão de negócio.',
-    'Hoje aplico essa mesma lógica de resolução de problemas para me tornar um futuro desenvolvedor Full-Stack, construindo interfaces com React, JavaScript, HTML5, CSS3 e Python, unindo base técnica sólida a uma postura organizada e orientada a resultado.',
+    'Passei anos resolvendo problemas críticos de infra e software sob pressão de SLAs.',
+    'Hoje, aplico essa mesma resiliência construindo aplicações Front-end robustas com React e TypeScript.',
   ],
 };
 
@@ -285,6 +286,7 @@ export const projects: Project[] = [
     title: 'Career-OS',
     description: 'App com IA para jovens de tech e dados no Brasil organizarem candidaturas em Kanban, simularem entrevistas, otimizarem o currículo e receberem insights semanais.',
     tech: 'TypeScript',
-    url: 'https://github.com/GiovanniBolsoni/Career-Os'
+    url: 'https://github.com/GiovanniBolsoni/Career-Os',
+    image: '/career-os-mockup.jpg'
   }
 ];

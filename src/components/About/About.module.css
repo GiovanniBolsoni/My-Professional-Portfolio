@@ -273,6 +273,10 @@
   margin-top: 2px;
 }
 
+.awsIcon {
+  color: #FF9900;
+}
+
 .certName {
   font-size: 1rem;
   font-weight: 500;

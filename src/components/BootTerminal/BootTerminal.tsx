@@ -29,6 +29,9 @@ export const BootTerminal = ({ onTransition }: BootTerminalProps) => {
   return (
     <div className={styles.terminalWrapper}>
       <div ref={terminalRef} className={styles.terminalContainer} />
+      <button className={styles.skipButton} onClick={onTransition}>
+        [ Pular Animação ]
+      </button>
     </div>
   );
 };

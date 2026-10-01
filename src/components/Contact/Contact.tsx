@@ -1,16 +1,33 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import styles from './Contact.module.css';
 import { profile, socials } from '../../data/resume';
 import { i18n } from '../../data/i18n';
 import Icon from '../../Icon';
+import { useScrambleText } from '../../hooks/useScrambleText';
 
 export const Contact = () => {
   const lang = 'pt';
   const t = i18n[lang].commands;
   const [copied, setCopied] = useState(false);
   const containerRef = useRef<HTMLElement>(null);
+  const [isTitleVisible, setIsTitleVisible] = useState(false);
+  const titleRef = useScrambleText(t.contact, isTitleVisible, { speed: 30, delay: 0 });
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsTitleVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    if (containerRef.current) observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   useGSAP(() => {
     gsap.from('.contact-left', {
@@ -46,7 +63,7 @@ export const Contact = () => {
     <section className={styles.contact} id="contact" ref={containerRef}>
       <div className={styles.container}>
         <h2 className={styles.title}>
-          <span className={styles.prompt}>&gt;</span> {t.contact}
+          <span className={styles.prompt}>&gt;</span> <span ref={titleRef as any}>{t.contact}</span>
         </h2>
         
         <div className={styles.content}>

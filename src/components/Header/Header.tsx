@@ -23,8 +23,22 @@ export const Header = () => {
 
   useEffect(() => {
     const handleToggle = () => toggleTheme();
+    const handleSetTheme = (e: CustomEvent<{ themeName: string }>) => {
+      const newTheme = e.detail.themeName;
+      if (themes[newTheme]) {
+        setTheme(newTheme);
+        applyTheme(themes[newTheme]);
+        localStorage.setItem('terminal-resume-theme', newTheme);
+      }
+    };
+    
     window.addEventListener('toggle-theme', handleToggle);
-    return () => window.removeEventListener('toggle-theme', handleToggle);
+    window.addEventListener('set-theme', handleSetTheme as EventListener);
+    
+    return () => {
+      window.removeEventListener('toggle-theme', handleToggle);
+      window.removeEventListener('set-theme', handleSetTheme as EventListener);
+    };
   }, [theme]);
 
   const openCommandPalette = () => {
@@ -38,11 +52,20 @@ export const Header = () => {
         
         <div className={styles.actions}>
           <nav className={styles.nav}>
-            <a href="#about">{t.about}</a>
-            <a href="#experience">{t.experience}</a>
-            <a href="#projects">{t.projects}</a>
-            <a href="#contact">{t.contact}</a>
+            <a href="#about" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('nav-transition', { detail: { targetId: '#about' } })); }}>{t.about}</a>
+            <a href="#experience" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('nav-transition', { detail: { targetId: '#experience' } })); }}>{t.experience}</a>
+            <a href="#projects" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('nav-transition', { detail: { targetId: '#projects' } })); }}>{t.projects}</a>
+            <a href="#contact" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('nav-transition', { detail: { targetId: '#contact' } })); }}>{t.contact}</a>
           </nav>
+
+          <div className={styles.socialNav}>
+            <a href="https://github.com/GiovanniBolsoni" target="_blank" rel="noreferrer" aria-label="GitHub">
+              [ GitHub ]
+            </a>
+            <a href="https://www.linkedin.com/in/giovanni-bolsoni/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+              [ LinkedIn ]
+            </a>
+          </div>
           
           <button className={styles.cmdBtn} onClick={openCommandPalette} aria-label="Command Palette">
             <Command size={16} />

@@ -206,87 +206,43 @@ export function createCommands(): Command[] {
         ctx.terminal.hideInput();
         ctx.terminal.clearOutput();
         
-        const skullFrames = [
-`    ███                                  ███    
-  ███████                              ███████  
-   ████████          ████████          ████████ 
-     ██████        ████████████        ██████   
-       ████      ████████████████      ████     
-                 ████  ████  ████               
-                 ████████████████               
-                   ██  ████  ██                 
-       ████          ████████          ████     
-     ██████        ████████████        ██████   
-   ████████          ████████          ████████ 
-  ███████                              ███████  
-    ███                                  ███    `,
-
-`    ███                                  ███    
-  ███████                              ███████  
-   ████████          ████████          ████████ 
-     ██████        ████████████        ██████   
-       ████      ████████████████      ████     
-                 ████  ████  ████               
-                 ████████████████               
-                   ██        ██                 
-       ████          ████████          ████     
-     ██████        ████████████        ██████   
-   ████████          ████████          ████████ 
-  ███████                              ███████  
-    ███                                  ███    `,
-
-`    ███                                  ███    
-  ███████                              ███████  
-   ████████          ████████          ████████ 
-     ██████        ████████████        ██████   
-       ████      ████████████████      ████     
-                 ████  ████  ████               
-                 ████████████████               
-                   ██   HA   ██                 
-       ████          ████████          ████     
-     ██████        ████████████        ██████   
-   ████████          ████████          ████████ 
-  ███████                              ███████  
-    ███                                  ███    `,
-
-`    ███                                  ███    
-  ███████                              ███████  
-   ████████          ████████          ████████ 
-     ██████        ████████████        ██████   
-       ████      ████████████████      ████     
-                 ████  ████  ████               
-                 ████████████████               
-                   ██        ██                 
-       ████         HA      HA         ████     
-     ██████        ████████████        ██████   
-   ████████          ████████          ████████ 
-  ███████                              ███████  
-    ███                                  ███    `,
-
-`    ███                                  ███    
-  ███████                              ███████  
-   ████████          ████████          ████████ 
-     ██████        ████████████        ██████   
-       ████      ████████████████      ████     
-                 ████  ████  ████               
-                 ████████████████               
-                   ██   HA   ██                 
-       ████         HA      HA         ████     
-     ██████    HA  ████████████  HA    ██████   
-   ████████          ████████          ████████ 
-  ███████                              ███████  
-    ███                                  ███    `
+        const topJaw = [
+          "███████████████████████████",
+          "███████▀▀▀░░░░░░░▀▀▀███████",
+          "████▀░░░░░░░░░░░░░░░░░▀████",
+          "███│░░░░░░░░░░░░░░░░░░░│███",
+          "██▌│░░░░░░░░░░░░░░░░░░░│▐██",
+          "██░└┐░░░░░░░░░░░░░░░░░┌┘░██",
+          "██░░└┐░░░░░░░░░░░░░░░┌┘░░██",
+          "██░░┌┘▄▄▄▄▄░░░░░▄▄▄▄▄└┐░░██",
+          "██▌░│██████▌░░░▐██████│░▐██",
+          "███░│▐███▀▀░░▄░░▀▀███▌│░███",
+          "██▀─┘░░░░░░░▐█▌░░░░░░░└─▀██",
+          "██▄░░░▄▄▄▓░░▀█▀░░▓▄▄▄░░░▄██",
+          "████▄─┘██▌░░░░░░░▐██└─▄████"
+        ];
+        const bottomJaw = [
+          "█████░░▐█─┬┬┬┬┬┬┬─█▌░░█████",
+          "████▌░░░▀┬┼┼┼┼┼┼┼┬▀░░░▐████",
+          "█████▄░░░└┴┴┴┴┴┴┴┘░░░▄█████",
+          "███████▄░░░░░░░░░░░▄███████",
+          "██████████▄▄▄▄▄▄▄██████████",
+          "███████████████████████████"
         ];
 
-        const initialHtml = `
-          <canvas id="matrix-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; opacity: 0.8;"></canvas>
-          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 20px; position: relative; z-index: 1;">
-            <pre id="skull-anim" style="color: #ff003c; font-size: clamp(0.7rem, 2vw, 1.2rem); line-height: 1.1; margin: 0; text-shadow: 2px 0 #00fff9, -2px 0 #ffff00; font-family: monospace; white-space: pre;">${skullFrames[0]}</pre>
-            <div style="color: #ff003c; font-weight: bold; margin-top: 20px; font-size: 1.2rem; letter-spacing: 2px;">SYSTEM COMPROMISED</div>
+        const overlayHtml = `
+          <div id="hack-overlay" style="position: fixed; inset: 0; z-index: 9999999; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden;">
+            <canvas id="matrix-canvas" style="position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; opacity: 0.8;"></canvas>
+            <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+              <pre id="skull-anim" style="color: #00ff00; font-size: clamp(0.7rem, 2vw, 1.2rem); line-height: 1.1; margin: 0; text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00; font-family: monospace; white-space: pre;">${[...topJaw, ...bottomJaw].join("\n")}</pre>
+              <div style="color: #00ff00; font-weight: bold; margin-top: 20px; font-size: 1.5rem; letter-spacing: 4px; text-shadow: 0 0 8px #00ff00;">SYSTEM COMPROMISED</div>
+            </div>
           </div>
         `;
         
-        ctx.terminal.print(initialHtml);
+        const overlayDiv = document.createElement('div');
+        overlayDiv.innerHTML = overlayHtml;
+        document.body.appendChild(overlayDiv.firstElementChild as HTMLElement);
 
         const delay = (ms: number) => new Promise(r => setTimeout(r, ms));
         
@@ -301,8 +257,7 @@ export function createCommands(): Command[] {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             
-            // Caracteres estilo Matrix (Katakana + Latim + Numeros)
-            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%""\'#&_(),.;:?!\\|{}<>[]^~ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ';
+            const letters = `ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%""'#&_(),.;:?!\\|{}<>[]^~ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ`;
             const fontSize = 16;
             const columns = Math.floor(canvas.width / fontSize);
             const drops: number[] = new Array(columns).fill(1);
@@ -332,18 +287,35 @@ export function createCommands(): Command[] {
         const pre = document.getElementById('skull-anim');
         
         if (pre) {
-          // Animação dos frames
-          for (let i = 0; i < skullFrames.length; i++) {
-            pre.textContent = skullFrames[i];
-            await delay(200);
+          let fallingText: string[] = [];
+          const jawCycle = [0, 1, 2, 3, 2, 1];
+          
+          for (let i = 0; i < 21; i++) {
+            const jawOpenLevel = jawCycle[i % jawCycle.length];
+            
+            if (jawOpenLevel >= 2 && i % 2 === 0) {
+              fallingText.unshift("█████   HA HA HA HA   █████");
+            } else {
+              fallingText.unshift("█████                 █████");
+            }
+            
+            const currentMiddle = fallingText.slice(0, jawOpenLevel);
+            while(currentMiddle.length < jawOpenLevel) {
+              currentMiddle.push("█████                 █████");
+            }
+            
+            pre.textContent = [...topJaw, ...currentMiddle, ...bottomJaw].join("\n");
+            await delay(120);
           }
         }
         
-        // Espera no final
         await delay(1000);
         
         if (matrixInterval) clearInterval(matrixInterval);
         
+        const hackOverlay = document.getElementById('hack-overlay');
+        if (hackOverlay) hackOverlay.remove();
+
         window.dispatchEvent(new CustomEvent('terminal-transition'));
         setTimeout(() => document.body.classList.remove('glitch-active'), 500);
         
