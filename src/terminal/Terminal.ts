@@ -122,7 +122,7 @@ export class Terminal {
   private _bannerHtml: string | null = null;
 
   private buildBannerHtml(): string {
-    const art = renderAsciiBanner("GIOVANNI BOLSONI");
+    const art = renderAsciiBanner("SAUDAÇÕES 🖖");
     const artLines = art
       .split("\n")
       .map((line: string) => `<span class="banner-art">${escapeHtml(line)}</span>`)
