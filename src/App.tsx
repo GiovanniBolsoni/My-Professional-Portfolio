@@ -61,68 +61,53 @@ export default function App() {
 
   return (
     <div className={styles.appShell}>
-      <div style={{ perspective: '2000px', transformStyle: 'preserve-3d', minHeight: '100vh' }}>
-        <AnimatePresence mode="popLayout">
-          {!hasBooted ? (
-            <motion.div
-              key="terminal"
-              initial={{ rotateY: 0, scale: 1 }}
-              exit={{ rotateY: 180, scale: 0.6 }}
-              transition={{ duration: 1.5, ease: [0.645, 0.045, 0.355, 1.000] }}
-              style={{ 
-                position: 'fixed', 
-                inset: 0, 
-                zIndex: 9999, 
-                transformOrigin: 'center center',
-                backfaceVisibility: 'hidden',
-                backgroundColor: 'var(--bg)' 
-              }}
-            >
-              <BootTerminal onTransition={handleTransition} />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="gui"
-              className={styles.mainContent}
-              initial={{ rotateY: -180, scale: 0.6 }}
-              animate={{ rotateY: 0, scale: 1 }}
-              transition={{ duration: 1.5, ease: [0.645, 0.045, 0.355, 1.000] }}
-              style={{ 
-                transformOrigin: 'center center',
-                backfaceVisibility: 'hidden',
-                minHeight: '100vh',
-                backgroundColor: 'var(--bg)'
-              }}
-            >
-              <Header />
-              <main>
-                <Hero />
-                <About />
-                <Projects />
-                <Contact />
-              </main>
-              
-              <Footer />
-              <CommandPalette />
-              <FloatingTerminalBtn onClick={() => setShowOverlay(true)} />
-              
-              <AnimatePresence>
-                {showOverlay && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 20 }}
-                    transition={{ duration: 0.3 }}
-                    style={{ position: 'relative', zIndex: 10000 }}
-                  >
-                    <TerminalOverlay onClose={() => setShowOverlay(false)} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+      <AnimatePresence mode="wait">
+        {!hasBooted ? (
+          <motion.div
+            key="terminal"
+            initial={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50, scale: 0.95 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+            style={{ position: 'fixed', inset: 0, zIndex: 9999 }}
+          >
+            <BootTerminal onTransition={handleTransition} />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="gui"
+            className={styles.mainContent}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+          >
+            <Header />
+            <main>
+              <Hero />
+              <About />
+              <Projects />
+              <Contact />
+            </main>
+            
+            <Footer />
+            <CommandPalette />
+            <FloatingTerminalBtn onClick={() => setShowOverlay(true)} />
+            
+            <AnimatePresence>
+              {showOverlay && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.3 }}
+                  style={{ position: 'relative', zIndex: 10000 }}
+                >
+                  <TerminalOverlay onClose={() => setShowOverlay(false)} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -7,7 +7,7 @@ import { escapeHtml } from "./utils";
 import { renderAsciiBanner } from "./asciiFont";
 
 const THEME_STORAGE_KEY = "terminal-resume-theme";
-const TYPE_SPEED_MS = 8;
+const TYPE_SPEED_MS = 1;
 const USER_NAME = "visitante";
 
 function delay(ms: number): Promise<void> {

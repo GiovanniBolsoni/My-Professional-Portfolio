@@ -203,7 +203,15 @@ export function createCommands(): Command[] {
       description: "inicia a interface gráfica (landing page)",
       instant: true,
       handler: () => {
-        window.dispatchEvent(new CustomEvent('terminal-transition'));
+        // Dispara o glitch na interface inteira do terminal
+        document.body.classList.add('glitch-active');
+        
+        setTimeout(() => {
+          window.dispatchEvent(new CustomEvent('terminal-transition'));
+          // Limpa a classe depois para não quebrar outras coisas
+          setTimeout(() => document.body.classList.remove('glitch-active'), 500);
+        }, 800);
+        
         return `<span class="term-accent">Iniciando interface gráfica...</span>`;
       }
     },

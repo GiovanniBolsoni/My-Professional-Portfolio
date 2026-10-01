@@ -7,7 +7,6 @@
   color: var(--fg);
   font-family: var(--font-sans);
   transition: background-color var(--transition-normal), color var(--transition-normal);
-  overflow-x: hidden;
 }
 
 .mainContent {
