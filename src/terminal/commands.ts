@@ -202,17 +202,44 @@ export function createCommands(): Command[] {
       name: "start",
       description: "inicia a interface gráfica (landing page)",
       instant: true,
-      handler: () => {
-        // Dispara o glitch na interface inteira do terminal
+      handler: async (ctx) => {
+        ctx.terminal.hideInput();
+        ctx.terminal.clearOutput();
+        
+        function renderSkull(): string {
+          return `
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 40px;">
+              <pre style="color: #ff003c; font-size: 1.2rem; line-height: 1.1; margin: 0; text-shadow: 2px 0 #00fff9, -2px 0 #ffff00;">
+                                        
+                ████████                
+              ████████████              
+            ████████████████            
+            ████  ████  ████            
+            ████████████████            
+              ██  ████  ██              
+                ████████                
+                                        
+              </pre>
+              <div style="color: #ff003c; font-weight: bold; margin-top: 20px; font-size: 1.2rem; letter-spacing: 2px;">SYSTEM COMPROMISED</div>
+            </div>
+          `;
+        }
+
+        const delay = (ms: number) => new Promise(r => setTimeout(r, ms));
+        
+        // Print the skull
+        ctx.terminal.print(renderSkull());
+        
+        // Glitch effect (colors inverting, etc)
         document.body.classList.add('glitch-active');
         
-        setTimeout(() => {
-          window.dispatchEvent(new CustomEvent('terminal-transition'));
-          // Limpa a classe depois para não quebrar outras coisas
-          setTimeout(() => document.body.classList.remove('glitch-active'), 500);
-        }, 800);
+        // Wait a bit to let the user see the "hack"
+        await delay(1200);
         
-        return `<span class="term-accent">Iniciando interface gráfica...</span>`;
+        window.dispatchEvent(new CustomEvent('terminal-transition'));
+        setTimeout(() => document.body.classList.remove('glitch-active'), 500);
+        
+        return "";
       }
     },
     {
