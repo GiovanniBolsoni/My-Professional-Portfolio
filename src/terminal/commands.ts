@@ -279,7 +279,8 @@ export function createCommands(): Command[] {
         ];
 
         const initialHtml = `
-          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 20px;">
+          <canvas id="matrix-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; opacity: 0.8;"></canvas>
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 20px; position: relative; z-index: 1;">
             <pre id="skull-anim" style="color: #ff003c; font-size: clamp(0.7rem, 2vw, 1.2rem); line-height: 1.1; margin: 0; text-shadow: 2px 0 #00fff9, -2px 0 #ffff00; font-family: monospace; white-space: pre;">${skullFrames[0]}</pre>
             <div style="color: #ff003c; font-weight: bold; margin-top: 20px; font-size: 1.2rem; letter-spacing: 2px;">SYSTEM COMPROMISED</div>
           </div>
@@ -290,6 +291,43 @@ export function createCommands(): Command[] {
         const delay = (ms: number) => new Promise(r => setTimeout(r, ms));
         
         document.body.classList.add('glitch-active');
+        
+        // Matrix Rain Setup
+        const canvas = document.getElementById('matrix-canvas') as HTMLCanvasElement;
+        let matrixInterval: number | undefined;
+        if (canvas) {
+          const c = canvas.getContext('2d');
+          if (c) {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            // Caracteres estilo Matrix (Katakana + Latim + Numeros)
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%""\'#&_(),.;:?!\\|{}<>[]^~ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ';
+            const fontSize = 16;
+            const columns = Math.floor(canvas.width / fontSize);
+            const drops: number[] = new Array(columns).fill(1);
+            
+            function drawMatrix() {
+              if (!c) return;
+              c.fillStyle = 'rgba(0, 0, 0, 0.05)';
+              c.fillRect(0, 0, canvas.width, canvas.height);
+              
+              c.fillStyle = '#0f0';
+              c.font = fontSize + 'px monospace';
+              
+              for (let i = 0; i < drops.length; i++) {
+                const text = letters.charAt(Math.floor(Math.random() * letters.length));
+                c.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                  drops[i] = 0;
+                }
+                drops[i]++;
+              }
+            }
+            matrixInterval = window.setInterval(drawMatrix, 33);
+          }
+        }
         
         const pre = document.getElementById('skull-anim');
         
@@ -303,6 +341,8 @@ export function createCommands(): Command[] {
         
         // Espera no final
         await delay(1000);
+        
+        if (matrixInterval) clearInterval(matrixInterval);
         
         window.dispatchEvent(new CustomEvent('terminal-transition'));
         setTimeout(() => document.body.classList.remove('glitch-active'), 500);
