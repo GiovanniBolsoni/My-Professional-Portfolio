@@ -292,9 +292,10 @@ export class Terminal {
     this.outputEl.appendChild(div);
 
     const plain = htmlToPlainText(line);
-    for (let i = 0; i < plain.length; i++) {
+    const charsPerTick = 5; // Imprime 5 caracteres por vez para ser mais fluido e rápido
+    for (let i = 0; i < plain.length; i += charsPerTick) {
       if (this.skipRequested) break;
-      div.textContent = plain.slice(0, i + 1);
+      div.textContent = plain.slice(0, i + charsPerTick);
       this.scrollToBottom();
       await delay(TYPE_SPEED_MS);
     }
