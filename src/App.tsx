@@ -25,7 +25,6 @@ import { NetworkBackground } from './components/NetworkBackground/NetworkBackgro
 import { CustomCursor } from './components/CustomCursor/CustomCursor';
 import { useKonamiCode } from './hooks/useKonamiCode';
 import { registerVisit, getVisitor } from './visitor/visitorStore';
-import { useVisitor } from './visitor/useVisitor';
 import styles from './App.module.css';
 
 export default function App() {

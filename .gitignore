@@ -32,6 +32,8 @@ coverage/
 # Build caches
 *.tsbuildinfo
 .eslintcache
+vite.config.js
+vite.config.d.ts
 
 # Environment
 .env
