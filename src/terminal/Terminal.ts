@@ -4,12 +4,12 @@ import { hostname } from "../data/resume";
 import { createCommands } from "./commands";
 import type { Command } from "./types";
 import { escapeHtml } from "./utils";
-import { renderAsciiBanner } from "./asciiFont";
+import { getVisitor, setVisitorName } from "../visitor/visitorStore";
+
 import { playTypingSound } from "../utils/sound";
 
 const THEME_STORAGE_KEY = "terminal-resume-theme";
 const TYPE_SPEED_MS = 1;
-const USER_NAME = "visitante";
 
 function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -58,7 +58,9 @@ export class Terminal {
 
     const topBar = document.createElement("div");
     topBar.className = "terminal-top-bar";
-    topBar.innerHTML = `<div class="term-mac-btns"><span class="mac-close"></span><span class="mac-min"></span><span class="mac-max"></span></div><div class="term-title">GIOVANNI@PORTFOLIO ~ /sys/guest</div>`;
+    const state = getVisitor();
+    const handle = state.handle || 'visitante';
+    topBar.innerHTML = `<div class="term-mac-btns"><span class="mac-close"></span><span class="mac-min"></span><span class="mac-max"></span></div><div class="term-title">GIOVANNI@PORTFOLIO ~ /home/${handle}</div>`;
 
     const output = document.createElement("div");
     output.className = "terminal-output";
@@ -120,32 +122,102 @@ export class Terminal {
     this.inputEl.readOnly = true;
     this.hideInput();
     
+    let state = getVisitor();
+    const isReturning = !!state.firstVisit;
+    const hasName = state.name.length > 0;
+    
     const bootSequence = [
       "Carregando kernel virtual...",
       "Inicializando módulos de memória... <span class='term-cyan'>[OK]</span>",
-      "Conectando ao servidor principal... <span class='term-cyan'>[OK]</span>",
-      "Verificando credenciais de acesso... <span class='term-accent'>[VISITANTE]</span>",
-      "Iniciando interface de linha de comando..."
+      "Conectando ao servidor principal... <span class='term-cyan'>[OK]</span>"
     ];
     
     for (const line of bootSequence) {
       await this.typeLine(`<span class="term-muted">${line}</span>`);
       await delay(200);
     }
+    
+    if (isReturning && hasName) {
+      this.print(`<span class="term-muted">Verificando credenciais de acesso...</span> <span class="term-accent">[${escapeHtml(state.handle.toUpperCase())}]</span>`);
+      const lastSessionStr = state.lastVisit ? `há ${Math.floor((Date.now() - state.lastVisit) / (1000 * 60 * 60 * 24))} dias` : 'recentemente';
+      this.print(`<span class="term-muted">Bem-vindo de volta, ${escapeHtml(state.name)}. Última sessão: ${lastSessionStr}.</span>`);
+    } else if (hasName) {
+      this.print(`<span class="term-muted">Verificando credenciais de acesso...</span> <span class="term-accent">[${escapeHtml(state.handle.toUpperCase())}]</span>`);
+    } else {
+      this.print(`<span class="term-muted">Verificando credenciais de acesso...</span> <span class="term-accent">[VISITANTE]</span>`);
+      await delay(200);
+      
+      // Perguntar nome
+      this.print(`login as: _ <span class="term-muted">como posso te chamar? (Enter para pular)</span>`);
+      
+      // Enable input temporary for name
+      if (this.inputEl.parentElement) this.inputEl.parentElement.style.display = '';
+      this.inputEl.readOnly = false;
+      this.inputEl.focus();
+      
+      const name = await this.readInputOnce();
+      this.hideInput();
+      this.inputEl.readOnly = true;
+      
+      if (name.trim()) {
+        const res = setVisitorName(name);
+        if (res.success) {
+          state = getVisitor();
+          this.print(`\n<span class="term-muted">Verificando credenciais de acesso...</span> <span class="term-accent">[${escapeHtml(state.handle.toUpperCase())}]</span>`);
+          this.print(`<span class="term-muted">seu nome fica salvo apenas neste navegador.</span>`);
+        } else if (res.easterEgg) {
+          this.print(`\n<span class="term-error">${escapeHtml(res.easterEgg)}</span>`);
+        }
+      }
+    }
+    
+    await delay(200);
+    this.print("<span class='term-muted'>Iniciando interface de linha de comando...</span>");
     this.print("");
     
     if (this.inputEl.parentElement) {
       this.inputEl.parentElement.style.display = '';
     }
     this.inputEl.readOnly = false;
+    this.inputEl.value = "";
+    
+    // Atualizar o topBar com o novo nome
+    state = getVisitor();
+    const handle = state.handle || 'visitante';
+    const titleEl = this.root.querySelector('.term-title');
+    if (titleEl) {
+      titleEl.innerHTML = `GIOVANNI@PORTFOLIO ~ /home/${handle}`;
+    }
+    
+    // Atualizar o prompt que já existe no DOM
+    const promptEl = this.root.querySelector('.prompt');
+    if (promptEl) {
+      promptEl.innerHTML = this.getPromptHtml();
+    }
+    
     this.inputEl.focus();
     await this.printAnimated(this.getBannerHtml());
+  }
+
+  private readInputOnce(): Promise<string> {
+    return new Promise((resolve) => {
+      const handler = (e: KeyboardEvent) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const val = this.inputEl.value;
+          this.inputEl.removeEventListener('keydown', handler);
+          resolve(val);
+        }
+      };
+      this.inputEl.addEventListener('keydown', handler);
+    });
   }
 
   // ---------- prompt ----------
 
   private getPromptHtml(): string {
-    return `<span class="prompt-user">${USER_NAME}</span><span class="prompt-punct">@</span><span class="prompt-host">${hostname}</span><span class="prompt-punct">:~$</span>`;
+    const handle = getVisitor().handle || 'visitante';
+    return `<span class="prompt-user">${escapeHtml(handle)}</span><span class="prompt-punct">@</span><span class="prompt-host">${hostname}</span><span class="prompt-punct">:~$</span>`;
   }
 
   // ---------- banner ----------
@@ -157,8 +229,10 @@ export class Terminal {
   private _bannerHtml: string | null = null;
 
   private buildBannerHtml(): string {
+    const name = getVisitor().name || "visitante";
+    const greeting = name !== "visitante" ? `Olá, ${escapeHtml(name)}, seja bem-vindo(a)!` : `Olá, seja bem vindo(a)!`;
     return [
-      `<span class="term-accent" style="font-size: 1.5em; font-weight: bold; text-shadow: 0 0 5px var(--accent);">Olá, seja bem vindo(a)!</span>`,
+      `<span class="term-accent" style="font-size: 1.5em; font-weight: bold; text-shadow: 0 0 5px var(--accent);">${greeting}</span>`,
       "",
       `Digite <span class="term-cyan">help</span> para ver os comandos.`,
       `Para acessar a interface gráfica, digite <span class="term-cyan">start</span>.`

@@ -1,23 +1,27 @@
 import { useRef, useState, useEffect } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { Command, ChevronDown, Download } from 'lucide-react';
+import { ChevronDown, Download } from 'lucide-react';
 import styles from './Hero.module.css';
 import { profile } from '../../data/resume';
 import { MagneticButton } from '../MagneticButton/MagneticButton';
 import { useScrambleText } from '../../hooks/useScrambleText';
+import { useVisitor } from '../../visitor/useVisitor';
+import { setVisitorName } from '../../visitor/visitorStore';
 
 export const Hero = () => {
   const containerRef = useRef<HTMLElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
   const [animationStarted, setAnimationStarted] = useState(false);
+  const visitor = useVisitor();
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [tempName, setTempName] = useState('');
 
   // Split roles for better visual
-  const roleText = profile.roles.join(' & ');
+  const roleText = profile.roles.join(' | ');
 
-  const nameRef = useScrambleText(profile.name, animationStarted, { speed: 40, delay: 600 });
-  const roleRef = useScrambleText(roleText, animationStarted, { speed: 30, delay: 1000 });
+  const nameRef = useScrambleText(profile.name, animationStarted, { speed: 30, delay: 600 });
 
   useGSAP(() => {
     // Reveal animation
@@ -71,21 +75,64 @@ export const Hero = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
+  const handleNameSubmit = (e: React.KeyboardEvent | React.FocusEvent) => {
+    if (e.type === 'keydown' && (e as React.KeyboardEvent).key !== 'Enter') return;
+    if (tempName.trim()) {
+      setVisitorName(tempName);
+    }
+    setIsEditingName(false);
+  };
+
+  const currentHour = new Date().getHours();
+  const greeting = currentHour < 12 ? 'Bom dia' : currentHour < 18 ? 'Boa tarde' : 'Boa noite';
+
   return (
     <section className={styles.hero} id="hero" ref={containerRef}>
       <div className={styles.heroBg} ref={bgRef}></div>
       <div className={styles.container} ref={textRef}>
-        <p className={`${styles.greeting} hero-elem-fade`}>Olá, visitante. Eu sou</p>
+        <p className={`${styles.greeting} hero-elem-fade`}>
+          {greeting},{' '}
+          {visitor.name ? (
+            <span className={styles.visitorName}>{visitor.name}</span>
+          ) : isEditingName ? (
+            <input 
+              type="text" 
+              className={styles.nameInput} 
+              placeholder="como posso te chamar?" 
+              autoFocus 
+              value={tempName}
+              onChange={e => setTempName(e.target.value)}
+              onKeyDown={handleNameSubmit}
+              onBlur={handleNameSubmit}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                borderBottom: '1px solid var(--accent)',
+                color: 'var(--accent)',
+                fontFamily: 'inherit',
+                fontSize: 'inherit',
+                outline: 'none',
+                width: '200px'
+              }}
+            />
+          ) : (
+            <span 
+              className={styles.visitorLink} 
+              onClick={() => setIsEditingName(true)}
+              style={{ cursor: 'pointer', borderBottom: '1px dotted var(--fg-subtle)', color: 'var(--fg-subtle)' }}
+            >
+              visitante
+            </span>
+          )}. Eu sou
+        </p>
         <h1 className={`${styles.name}`} ref={nameRef as any}>
           {/* Initial state to avoid jump before JS runs */}
           {profile.name}
         </h1>
-        <h2 className={`${styles.role}`} ref={roleRef as any}>
+        <h2 className={`${styles.role} hero-elem-fade`}>
           {roleText}
         </h2>
-        <p className={`${styles.description} hero-elem-fade`}>
-          Do SLA crítico ao Código Limpo.
-        </p>
+
         
         <div className={`${styles.actions} hero-elem-fade`}>
           <MagneticButton as="a" href="#projects" className={styles.btnPrimary}>

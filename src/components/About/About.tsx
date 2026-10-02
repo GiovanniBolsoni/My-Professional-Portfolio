@@ -1,14 +1,14 @@
 import { useRef, useState, useEffect } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { Award, Briefcase, Code2, Cloud } from 'lucide-react';
+import { Briefcase, Code2, GraduationCap } from 'lucide-react';
 import styles from './About.module.css';
-import { profile, skills, certifications, experiences } from '../../data/resume';
+import { profile, skills, experiences, education, certifications } from '../../data/resume';
 import { useScrambleText } from '../../hooks/useScrambleText';
 
 export const About = () => {
   const containerRef = useRef<HTMLElement>(null);
-  const [activeTab, setActiveTab] = useState<'journey' | 'stack' | 'certs'>('journey');
+  const [activeTab, setActiveTab] = useState<'journey' | 'edu' | 'stack'>('journey');
   const [isTitleVisible, setIsTitleVisible] = useState(false);
   const titleRef = useScrambleText('sobre_mim', isTitleVisible, { speed: 30, delay: 0 });
 
@@ -52,7 +52,7 @@ export const About = () => {
             
             <div className={`${styles.textBlock} about-elem`}>
               {profile.summary.map((paragraph, idx) => (
-                <p key={idx} className={styles.paragraph}>{paragraph}</p>
+                <p key={idx} className={styles.paragraph} dangerouslySetInnerHTML={{ __html: paragraph }} />
               ))}
             </div>
 
@@ -82,16 +82,16 @@ export const About = () => {
                 <Briefcase size={16} /> Experiência
               </button>
               <button 
+                className={`${styles.tabBtn} ${activeTab === 'edu' ? styles.active : ''}`}
+                onClick={() => setActiveTab('edu')}
+              >
+                <GraduationCap size={16} /> Formação
+              </button>
+              <button 
                 className={`${styles.tabBtn} ${activeTab === 'stack' ? styles.active : ''}`}
                 onClick={() => setActiveTab('stack')}
               >
                 <Code2 size={16} /> Stack
-              </button>
-              <button 
-                className={`${styles.tabBtn} ${activeTab === 'certs' ? styles.active : ''}`}
-                onClick={() => setActiveTab('certs')}
-              >
-                <Award size={16} /> Certificados
               </button>
             </div>
 
@@ -113,6 +113,25 @@ export const About = () => {
                 </div>
               )}
 
+              {activeTab === 'edu' && (
+                <div className={styles.eduContainer}>
+                  <div className={styles.eduHeader}>
+                    <h3 className={styles.role}>{education.course}</h3>
+                    <span className={styles.tag}>{education.status}</span>
+                  </div>
+                  <p className={styles.company}>{education.institution}</p>
+                  
+                  <p className={styles.eduDescription} dangerouslySetInnerHTML={{ __html: education.description }} />
+                  
+                  <h4 className={styles.categoryName} style={{ marginTop: '1.5rem' }}>Matérias Desenvolvidas:</h4>
+                  <ul className={styles.bullets}>
+                    {education.subjects.map((subject, i) => (
+                      <li key={i}>{subject}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
               {activeTab === 'stack' && (
                 <div className={styles.stackList}>
                   {skills.map((skillGroup, idx) => (
@@ -122,24 +141,6 @@ export const About = () => {
                         {skillGroup.items.map((item, i) => (
                           <span key={i} className={styles.tag}>{item}</span>
                         ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {activeTab === 'certs' && (
-                <div className={styles.certList}>
-                  {certifications.map((cert, idx) => (
-                    <div key={idx} className={styles.certCard}>
-                      {cert.org.includes('AWS') ? (
-                        <Cloud className={`${styles.certIcon} ${styles.awsIcon}`} size={20} />
-                      ) : (
-                        <Award className={styles.certIcon} size={20} />
-                      )}
-                      <div>
-                        <h4 className={styles.certName}>{cert.title}</h4>
-                        <p className={styles.certIssuer}>{cert.org} <span className={styles.certYear}>({cert.year})</span></p>
                       </div>
                     </div>
                   ))}

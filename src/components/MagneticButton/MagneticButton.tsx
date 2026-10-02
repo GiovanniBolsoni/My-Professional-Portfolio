@@ -7,6 +7,8 @@ interface MagneticButtonProps {
   onClick?: () => void;
   as?: 'button' | 'a';
   href?: string;
+  target?: string;
+  rel?: string;
 }
 
 export const MagneticButton: React.FC<MagneticButtonProps> = ({ 
@@ -14,7 +16,9 @@ export const MagneticButton: React.FC<MagneticButtonProps> = ({
   className = '', 
   onClick, 
   as = 'button',
-  href 
+  href,
+  target,
+  rel
 }) => {
   const magneticRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -61,6 +65,8 @@ export const MagneticButton: React.FC<MagneticButtonProps> = ({
         className={className}
         onClick={onClick}
         href={href}
+        target={target}
+        rel={rel}
         style={{ display: 'inline-flex', position: 'relative' }}
       >
         {children}

@@ -62,16 +62,16 @@ button:active, a[class*="btn"]:active {
 
 /* Glitch Effect - Triggered by Terminal */
 body.glitch-active #root {
-  animation: root-glitch 0.2s steps(2, end) infinite;
-  filter: contrast(150%) saturate(200%) drop-shadow(4px 0px 0px rgba(255,0,255,0.8)) drop-shadow(-4px 0px 0px rgba(0,255,255,0.8));
+  animation: root-glitch-light 0.15s steps(2, end) infinite;
+  filter: drop-shadow(2px 0px 0px rgba(0, 255, 0, 0.4)) drop-shadow(-2px 0px 0px rgba(255, 0, 255, 0.4));
   overflow: hidden;
 }
 
-@keyframes root-glitch {
-  0% { filter: invert(0) hue-rotate(0deg) contrast(150%) saturate(200%); }
-  20% { filter: invert(20%) hue-rotate(90deg) contrast(200%) saturate(300%); }
-  40% { filter: invert(10%) hue-rotate(-45deg) contrast(150%) saturate(150%); }
-  60% { filter: invert(100%) hue-rotate(180deg) contrast(200%) saturate(300%); }
-  80% { filter: invert(10%) hue-rotate(45deg) contrast(120%) saturate(200%); }
-  100% { filter: invert(0) hue-rotate(0deg) contrast(150%) saturate(200%); }
+@keyframes root-glitch-light {
+  0% { transform: translate(0); filter: brightness(100%) hue-rotate(0deg); }
+  20% { transform: translate(-2px, 1px); filter: brightness(110%) hue-rotate(10deg); }
+  40% { transform: translate(2px, -1px); filter: brightness(90%) hue-rotate(-10deg); }
+  60% { transform: translate(-1px, 2px); filter: brightness(120%) hue-rotate(20deg); }
+  80% { transform: translate(1px, -2px); filter: brightness(95%) hue-rotate(-5deg); }
+  100% { transform: translate(0); filter: brightness(100%) hue-rotate(0deg); }
 }

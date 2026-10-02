@@ -24,6 +24,8 @@ import { NavTransitionOverlay } from './components/NavTransitionOverlay/NavTrans
 import { NetworkBackground } from './components/NetworkBackground/NetworkBackground';
 import { CustomCursor } from './components/CustomCursor/CustomCursor';
 import { useKonamiCode } from './hooks/useKonamiCode';
+import { registerVisit, getVisitor } from './visitor/visitorStore';
+import { useVisitor } from './visitor/useVisitor';
 import styles from './App.module.css';
 
 export default function App() {
@@ -38,6 +40,25 @@ export default function App() {
       window.dispatchEvent(new CustomEvent('set-theme', { detail: { themeName: 'verde-matrix' } }));
     }
   }, [isUnlocked]);
+
+  useEffect(() => {
+    // Registra a visita ao iniciar o app
+    registerVisit().catch(console.error);
+
+    const handleVisibility = () => {
+      if (document.hidden) {
+        const v = getVisitor();
+        if (v.name) {
+          document.title = `Volta aqui, ${v.name} 👀`;
+        }
+      } else {
+        document.title = 'Giovanni Bolsoni | Software Engineer';
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
+  }, []);
 
   useEffect(() => {
     if (hasBooted) {
@@ -105,6 +126,44 @@ export default function App() {
     sessionStorage.setItem('portfolio-booted', 'true');
     setHasBooted(true);
     setShowOverlay(false);
+    
+    // Check if returning visitor for toast
+    const v = getVisitor();
+    if (v.visits > 1 && v.name) {
+      const toast = document.createElement('div');
+      toast.className = styles.visitorToast;
+      toast.innerHTML = `Bom te ver de novo, ${v.name} (${v.visits}ª visita)`;
+      document.body.appendChild(toast);
+      
+      // Setup simple style inline since it's just a toast
+      toast.style.position = 'fixed';
+      toast.style.bottom = '20px';
+      toast.style.left = '50%';
+      toast.style.transform = 'translateX(-50%) translateY(100px)';
+      toast.style.opacity = '0';
+      toast.style.backgroundColor = 'var(--bg-card)';
+      toast.style.color = 'var(--fg)';
+      toast.style.padding = '12px 24px';
+      toast.style.borderRadius = '8px';
+      toast.style.border = '1px solid var(--border)';
+      toast.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)';
+      toast.style.zIndex = '10000';
+      toast.style.transition = 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        toast.style.transition = 'opacity 0.2s';
+      }
+      
+      requestAnimationFrame(() => {
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+        toast.style.opacity = '1';
+      });
+      
+      setTimeout(() => {
+        toast.style.transform = 'translateX(-50%) translateY(20px)';
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 500);
+      }, 4000);
+    }
   };
 
   return (

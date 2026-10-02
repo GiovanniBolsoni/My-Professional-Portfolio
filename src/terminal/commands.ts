@@ -14,6 +14,7 @@ import {
 
 import type { Command, CommandContext } from "./types";
 import { escapeHtml, linkify, renderJsonBlock } from "./utils";
+import { getVisitor, setVisitorName, clearVisitor } from "../visitor/visitorStore";
 
 function formatAbout(): string {
   return [
@@ -112,6 +113,21 @@ function formatHistory(ctx: CommandContext): string {
 }
 
 function formatWhoami(): string {
+  const visitor = getVisitor();
+  const name = visitor.handle || "visitante";
+  
+  if (name === "visitante" && !visitor.visitorNumber) {
+    return `visitante — anônimo`;
+  }
+  
+  const vNumStr = visitor.visitorNumber ? `#${visitor.visitorNumber.toLocaleString('pt-BR')}` : '#---';
+  const visitsStr = `${visitor.visits}ª visita`;
+  const firstVisitDate = visitor.firstVisit ? new Date(visitor.firstVisit).toLocaleDateString('pt-BR') : 'hoje';
+  
+  return `${escapeHtml(name)} — visitante ${vNumStr} · ${visitsStr} · primeira vez aqui em ${firstVisitDate}`;
+}
+
+function formatGiovanni(): string {
   return `${escapeHtml(profile.shortName)} — ${escapeHtml(profile.roles[1].toLowerCase())} · ${escapeHtml(profile.roles[0].toLowerCase())}`;
 }
 
@@ -151,7 +167,47 @@ function formatThemeCommand(ctx: CommandContext): string {
 
 export function createCommands(): Command[] {
   return [
-    { name: "whoami", description: "resumo em uma linha", handler: () => formatWhoami() },
+    { name: "whoami", description: "quem é você?", handler: () => formatWhoami() },
+    { name: "giovanni", description: "quem é o autor do portfólio?", handler: () => formatGiovanni() },
+    { 
+      name: "name", 
+      description: "define ou altera seu nome", 
+      handler: (ctx) => {
+        if (ctx.args.length === 0) return `<span class="term-error">uso: name &lt;seu nome&gt;</span>`;
+        const newName = ctx.args.join(" ");
+        const res = setVisitorName(newName);
+        if (res.success) {
+          const v = getVisitor();
+          const titleEl = document.querySelector('.term-title');
+          if (titleEl) titleEl.innerHTML = `GIOVANNI@PORTFOLIO ~ /home/${v.handle}`;
+          return `Nome salvo como <span class="term-accent">${escapeHtml(v.name)}</span>.`;
+        } else if (res.easterEgg) {
+          return `<span class="term-error">${escapeHtml(res.easterEgg)}</span>`;
+        } else {
+          return `<span class="term-error">${escapeHtml(res.error || 'Nome inválido')}</span>`;
+        }
+      } 
+    },
+    { 
+      name: "forget", 
+      description: "apaga seus dados deste navegador", 
+      instant: true,
+      handler: () => {
+        clearVisitor();
+        const titleEl = document.querySelector('.term-title');
+        if (titleEl) titleEl.innerHTML = `GIOVANNI@PORTFOLIO ~ /sys/guest`;
+        return `Dados apagados. Você voltou a ser um <span class="term-accent">visitante</span> anônimo.`;
+      } 
+    },
+    { 
+      name: "ticket", 
+      description: "mostra o seu número de visitante", 
+      handler: () => {
+        const num = getVisitor().visitorNumber;
+        if (!num) return `Ticket ainda não gerado ou não disponível.`;
+        return `Seu ticket é <span class="term-accent">#${num.toLocaleString('pt-BR')}</span>.`;
+      } 
+    },
     { name: "about", description: "sobre mim", handler: () => formatAbout() },
     { name: "stack", description: "minhas tecnologias", handler: () => formatStack() },
     { name: "projects", description: "meus projetos em destaque", handler: () => formatProjects() },
@@ -246,8 +302,6 @@ export function createCommands(): Command[] {
 
         const delay = (ms: number) => new Promise(r => setTimeout(r, ms));
         
-        document.body.classList.add('glitch-active');
-        
         // Matrix Rain Setup
         const canvas = document.getElementById('matrix-canvas') as HTMLCanvasElement;
         let matrixInterval: number | undefined;
@@ -316,8 +370,9 @@ export function createCommands(): Command[] {
         const hackOverlay = document.getElementById('hack-overlay');
         if (hackOverlay) hackOverlay.remove();
 
+        document.body.classList.add('glitch-active');
         window.dispatchEvent(new CustomEvent('terminal-transition'));
-        setTimeout(() => document.body.classList.remove('glitch-active'), 500);
+        setTimeout(() => document.body.classList.remove('glitch-active'), 400);
         
         return "";
       }
