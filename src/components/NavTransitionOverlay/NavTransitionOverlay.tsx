@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import gsap from 'gsap';
 import styles from './NavTransitionOverlay.module.css';
+import { scrollToSection } from '../../utils/scroll';
 
 export const NavTransitionOverlay = () => {
   const [isActive, setIsActive] = useState(false);
@@ -17,15 +18,7 @@ export const NavTransitionOverlay = () => {
       const tl = gsap.timeline({
         onComplete: () => {
           // Scroll to element
-          const targetSelector = targetId.startsWith('#') ? targetId : `#${targetId}`;
-          const el = document.querySelector(targetSelector);
-          if (el) {
-            if ((window as any).lenis) {
-              (window as any).lenis.scrollTo(el, { immediate: true, offset: -80 });
-            } else {
-              el.scrollIntoView({ behavior: 'auto' });
-            }
-          }
+          scrollToSection(targetId);
           
           // Flash effect
           gsap.to(overlayRef.current, {

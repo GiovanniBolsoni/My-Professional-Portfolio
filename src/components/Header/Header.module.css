@@ -31,6 +31,20 @@
   color: var(--accent);
   letter-spacing: -0.05em;
   user-select: none;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity var(--transition-fast), filter var(--transition-fast);
+}
+
+.logo:hover {
+  opacity: 0.8;
+  filter: brightness(1.2);
+}
+
+.logo:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 4px;
 }
 
 .actions {
