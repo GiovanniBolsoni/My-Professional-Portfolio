@@ -100,9 +100,9 @@ export const Contact = () => {
               <span className={styles.dot}></span>
             </div>
             <div className={styles.termBody}>
-              <p><span className={styles.prompt}>{handle}@giovanni:~$</span> ./check_status.sh</p>
+              <p><span className={styles.termPrompt}>{handle}@giovanni:~$</span> <span className={styles.termMuted}>./check_status.sh</span></p>
               <p className={styles.termOutput}>ticket {vNumStr} aberto por {handle} · status: {typedStatus}</p>
-              <p><span className={styles.prompt}>{handle}@giovanni:~$</span> <span className={styles.cursor}></span></p>
+              <p><span className={styles.termPrompt}>{handle}@giovanni:~$</span> <span className={styles.cursor}></span></p>
             </div>
           </div>
         </div>
