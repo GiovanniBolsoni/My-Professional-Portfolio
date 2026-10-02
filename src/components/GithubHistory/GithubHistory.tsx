@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
-import GitHubCalendar from 'react-github-calendar';
+import { GitHubCalendar } from 'react-github-calendar';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import styles from './GithubHistory.module.css';
