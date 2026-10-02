@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { motion, AnimatePresence } from 'framer-motion';
@@ -9,7 +9,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './Certifications.module.css';
 import { certifications } from '../../data/resume';
 import { i18n } from '../../data/i18n';
-import { useScrambleText } from '../../hooks/useScrambleText';
+import { GlitchText } from '../GlitchText/GlitchText';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -20,23 +20,7 @@ export const Certifications = () => {
   // Use undefined for type safety or specific cert type. For simplicity, any.
   const [selectedCert, setSelectedCert] = useState<any | null>(null);
 
-  const [isTitleVisible, setIsTitleVisible] = useState(false);
   const titleText = t.certifications || 'certificados.list()';
-  const titleRef = useScrambleText(titleText, isTitleVisible, { speed: 30, delay: 0 });
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsTitleVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    if (containerRef.current) observer.observe(containerRef.current);
-    return () => observer.disconnect();
-  }, []);
 
   useGSAP(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -66,7 +50,7 @@ export const Certifications = () => {
     <section className={styles.certs} id="certifications" ref={containerRef}>
       <div className={styles.container}>
         <h2 className={styles.title}>
-          <span className={styles.prompt}>&gt;</span> <span ref={titleRef as any}>{titleText}</span>
+          <span className={styles.prompt}>&gt;</span> <GlitchText as="span" text={titleText} />
         </h2>
         
         <div className={styles.grid}>

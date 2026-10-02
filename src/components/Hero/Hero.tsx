@@ -5,7 +5,7 @@ import { ChevronDown, Download } from 'lucide-react';
 import styles from './Hero.module.css';
 import { profile } from '../../data/resume';
 import { MagneticButton } from '../MagneticButton/MagneticButton';
-import { useScrambleText } from '../../hooks/useScrambleText';
+import { GlitchText } from '../GlitchText/GlitchText';
 import { useVisitor } from '../../visitor/useVisitor';
 import { setVisitorName } from '../../visitor/visitorStore';
 
@@ -18,10 +18,7 @@ export const Hero = () => {
   const [isEditingName, setIsEditingName] = useState(false);
   const [tempName, setTempName] = useState('');
 
-  // Split roles for better visual
   const roleText = profile.roles.join(' | ');
-
-  const nameRef = useScrambleText(profile.name, animationStarted, { speed: 30, delay: 600 });
 
   useGSAP(() => {
     // Reveal animation
@@ -129,13 +126,20 @@ export const Hero = () => {
             </span>
           )}. Eu sou
         </p>
-        <h1 className={`${styles.name}`} ref={nameRef as any}>
-          {/* Initial state to avoid jump before JS runs */}
-          {profile.name}
-        </h1>
-        <h2 className={`${styles.role} hero-elem-fade`} style={{ opacity: 0 }}>
-          {roleText}
-        </h2>
+        <GlitchText 
+          as="h1" 
+          className={styles.name} 
+          text={profile.name} 
+          revealWhenVisible={animationStarted} 
+          revealDelay={600} 
+        />
+        <GlitchText 
+          as="h2" 
+          className={`${styles.role} hero-elem-fade`} 
+          style={{ opacity: 0 }} 
+          text={roleText} 
+          revealWhenVisible={false} 
+        />
 
         
         <div className={`${styles.actions} hero-elem-fade`} style={{ opacity: 0 }}>

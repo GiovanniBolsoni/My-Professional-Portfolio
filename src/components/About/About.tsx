@@ -1,30 +1,14 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { Briefcase, Code2, GraduationCap } from 'lucide-react';
 import styles from './About.module.css';
 import { profile, skills, experiences, education, certifications } from '../../data/resume';
-import { useScrambleText } from '../../hooks/useScrambleText';
+import { GlitchText } from '../GlitchText/GlitchText';
 
 export const About = () => {
   const containerRef = useRef<HTMLElement>(null);
   const [activeTab, setActiveTab] = useState<'journey' | 'edu' | 'stack'>('journey');
-  const [isTitleVisible, setIsTitleVisible] = useState(false);
-  const titleRef = useScrambleText('sobre_mim', isTitleVisible, { speed: 30, delay: 0 });
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsTitleVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    if (containerRef.current) observer.observe(containerRef.current);
-    return () => observer.disconnect();
-  }, []);
 
   useGSAP(() => {
     gsap.from('.about-elem', {
@@ -47,7 +31,7 @@ export const About = () => {
           {/* Coluna Esquerda: Texto e Stats */}
           <div className={styles.leftCol}>
             <h2 className={`${styles.title} about-elem`}>
-              <span className={styles.prompt}>~/</span> <span ref={titleRef as any}>sobre_mim</span>
+              <span className={styles.prompt}>~/</span> <GlitchText as="span" text="sobre_mim" />
             </h2>
             
             <div className={`${styles.textBlock} about-elem`}>
