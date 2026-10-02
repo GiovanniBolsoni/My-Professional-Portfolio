@@ -46,7 +46,7 @@
 }
 
 :global(.terminal-top-bar) {
-  background: var(--bg);
+  background: var(--term-header, var(--bg));
   border-bottom: 1px solid var(--border);
   padding: 8px 16px;
   display: flex;
@@ -71,7 +71,7 @@
 :global(.mac-max) { background-color: #27c93f; }
 
 :global(.term-title) {
-  color: var(--muted);
+  color: var(--term-muted, var(--muted));
   font-family: var(--font-mono);
   font-size: 0.8rem;
   letter-spacing: 1px;
@@ -103,10 +103,10 @@
   width: 8px;
 }
 :global(.terminal-output::-webkit-scrollbar-track) {
-  background: var(--bg);
+  background: var(--term-bg, var(--bg));
 }
 :global(.terminal-output::-webkit-scrollbar-thumb) {
-  background: var(--border);
+  background: var(--term-muted, var(--border));
   border-radius: 4px;
 }
 
@@ -127,29 +127,29 @@
   flex: 1;
   background: transparent;
   border: none;
-  color: var(--fg);
+  color: var(--term-fg, var(--fg));
   font-family: inherit;
   font-size: inherit;
   outline: none;
 }
 
-:global(.prompt-user) { color: var(--cyan); }
-:global(.prompt-punct) { color: var(--muted); }
-:global(.prompt-host) { color: var(--accent); }
-:global(.term-accent) { color: var(--accent); }
-:global(.term-cyan) { color: var(--cyan); }
-:global(.term-muted) { color: var(--muted); }
-:global(.term-error) { color: #ff5f56; }
-:global(.cmd-echo) { color: var(--fg); }
+:global(.prompt-user) { color: var(--term-cyan, var(--cyan)); }
+:global(.prompt-punct) { color: var(--term-muted, var(--muted)); }
+:global(.prompt-host) { color: var(--term-accent, var(--accent)); }
+:global(.term-accent) { color: var(--term-accent, var(--accent)); }
+:global(.term-cyan) { color: var(--term-cyan, var(--cyan)); }
+:global(.term-muted) { color: var(--term-muted, var(--muted)); }
+:global(.term-error) { color: var(--term-error, #ff5f56); }
+:global(.cmd-echo) { color: var(--term-fg, var(--fg)); }
 :global(.banner-art) {
-  color: var(--cyan);
+  color: var(--term-cyan, var(--cyan));
   font-weight: bold;
 }
 :global(.term-link) {
-  color: var(--cyan);
+  color: var(--term-cyan, var(--cyan));
   text-decoration: underline;
   cursor: pointer;
 }
 :global(.term-link:hover) {
-  color: var(--accent);
+  color: var(--term-accent, var(--accent));
 }
