@@ -4,7 +4,9 @@ export const config = {
   runtime: 'edge',
 };
 
-// Required environment variables in Vercel: UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN
+// Required environment variables in Vercel:
+// Redis.fromEnv() aceita tanto UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN 
+// quanto KV_REST_API_URL / KV_REST_API_TOKEN (Vercel KV via Upstash)
 const redis = Redis.fromEnv();
 
 export default async function handler(req: Request) {
