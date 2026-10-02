@@ -4,7 +4,7 @@ import gsap from 'gsap';
 interface MagneticButtonProps {
   children: React.ReactNode;
   className?: string;
-  onClick?: () => void;
+  onClick?: (e: any) => void;
   as?: 'button' | 'a';
   href?: string;
   target?: string;

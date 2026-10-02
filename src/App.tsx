@@ -71,6 +71,8 @@ export default function App() {
       lerp: 0.1,
       smoothWheel: true,
     });
+    
+    (window as any).lenis = lenis;
 
     lenis.on('scroll', ScrollTrigger.update);
 
@@ -80,6 +82,9 @@ export default function App() {
 
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
+    
+    window.addEventListener('load', () => ScrollTrigger.refresh());
+    document.fonts.ready.then(() => ScrollTrigger.refresh());
 
     // Easter egg for developers
     const easterEgg = `
@@ -198,23 +203,35 @@ export default function App() {
           <motion.div
             key="gui"
             className={styles.mainContent}
-            initial={{ opacity: 0, scaleY: 0.01, filter: 'brightness(300%) contrast(200%) blur(10px)' }}
-            animate={{ 
-              opacity: [0, 1, 1], 
-              scaleY: [0.01, 0.01, 1],
-              filter: [
-                'brightness(300%) contrast(200%) blur(10px)', 
-                'brightness(150%) contrast(150%) blur(2px)', 
-                'blur(0px)'
-              ]
-            }}
+            initial={
+              window.matchMedia('(prefers-reduced-motion: reduce)').matches
+                ? { opacity: 0 }
+                : { opacity: 0, clipPath: 'inset(49.5% 0 49.5% 0)', filter: 'brightness(300%) contrast(200%) blur(10px)' }
+            }
+            animate={
+              window.matchMedia('(prefers-reduced-motion: reduce)').matches
+                ? { opacity: 1 }
+                : { 
+                    opacity: [0, 1, 1], 
+                    clipPath: ['inset(49.5% 0 49.5% 0)', 'inset(49.5% 0 49.5% 0)', 'inset(0% 0 0% 0)'],
+                    filter: [
+                      'brightness(300%) contrast(200%) blur(10px)', 
+                      'brightness(150%) contrast(150%) blur(2px)', 
+                      'blur(0px)'
+                    ]
+                  }
+            }
             onAnimationComplete={() => {
-              // Remove filter after animation to fix position:fixed children
               const gui = document.getElementById('gui-container');
               if (gui) {
                 gui.style.filter = 'none';
-                gui.style.transform = 'none';
+                gui.style.clipPath = 'none';
               }
+              window.dispatchEvent(new Event('gui-ready'));
+              if ((window as any).lenis) {
+                (window as any).lenis.resize();
+              }
+              ScrollTrigger.refresh();
             }}
             id="gui-container"
             transition={{ duration: 0.6, times: [0, 0.3, 1], ease: "circOut", delay: 0.1 }}
