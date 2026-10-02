@@ -51,6 +51,11 @@
   margin-bottom: var(--space-4);
 }
 
+.paragraph strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+
 .stats {
   display: flex;
   gap: var(--space-4);
@@ -208,6 +213,34 @@
   color: var(--muted);
 }
 
+/* Education Tab */
+.eduContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.eduHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-1);
+}
+
+.eduDescription {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--fg-subtle);
+  margin-top: var(--space-4);
+}
+
+.eduDescription strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+
 /* Stack */
 .stackList {
   display: flex;
@@ -233,11 +266,16 @@
 .tag {
   background-color: var(--surface);
   border: 1px solid var(--border);
-  padding: 4px 10px;
+  padding: 2px 8px;
   border-radius: 6px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--fg);
   transition: border-color var(--transition-fast);
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  width: fit-content;
 }
 
 .tag:hover {

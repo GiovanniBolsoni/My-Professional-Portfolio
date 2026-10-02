@@ -34,7 +34,6 @@ export const NavTransitionOverlay = () => {
 
       // Typewriter effect
       const fullCmd = `> root@giovani:~$ cd ${targetName} && cat ${targetName}.json`;
-      let currentText = '';
       
       tl.to(overlayRef.current, {
         opacity: 1,

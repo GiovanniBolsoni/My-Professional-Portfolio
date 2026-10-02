@@ -46,3 +46,11 @@
   color: var(--muted);
   margin: 0;
 }
+
+.visitorInfo {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-subtle);
+  margin: 0;
+  opacity: 0.6;
+}

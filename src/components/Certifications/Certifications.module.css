@@ -1,6 +1,6 @@
 .certs {
   padding: 6rem 0;
-  background: var(--bg);
+  background: var(--surface);
 }
 
 .container {
@@ -26,12 +26,20 @@
 }
 
 .card {
-  background: var(--surface, #151923);
+  background: var(--bg);
   border: 1px solid var(--border, #252b3b);
   border-radius: 8px;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.card:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .header {
@@ -57,6 +65,127 @@
 }
 
 .description {
-  color: var(--muted);
+  display: none;
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+
+.modalContent {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: var(--space-8);
+  max-width: 500px;
+  width: 100%;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.closeBtn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  color: var(--fg-subtle);
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all var(--transition-fast);
+}
+
+.closeBtn:hover {
+  color: var(--fg);
+  background: var(--surface-hover);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-2);
+}
+
+.modalTitle {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--fg);
+  margin-bottom: var(--space-2);
+}
+
+.modalSubTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: var(--space-4);
+}
+
+.modalOrg {
+  color: var(--accent);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.modalHours {
+  color: var(--fg-subtle);
   font-size: 0.9rem;
+  font-family: var(--font-mono);
+}
+
+.modalDescription {
+  font-family: var(--font-sans);
+  color: var(--fg-subtle);
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+.modalImageContainer {
+  margin-bottom: var(--space-4);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  max-height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--surface-hover);
+}
+
+.modalImage {
+  max-width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+}
+
+.modalPdfLink {
+  display: inline-block;
+  margin-top: var(--space-4);
+  padding: var(--space-2) var(--space-4);
+  background-color: var(--accent);
+  color: #000;
+  border-radius: 4px;
+  font-weight: 600;
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  transition: all var(--transition-fast);
+}
+
+.modalPdfLink:hover {
+  background-color: var(--accent-hover, #0aa883);
+  transform: translateY(-2px);
 }

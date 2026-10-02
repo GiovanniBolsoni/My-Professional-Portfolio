@@ -1,26 +1,18 @@
+import { useVisitor } from '../../visitor/useVisitor';
 import styles from './Footer.module.css';
-import { socials } from '../../data/resume';
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const visitor = useVisitor();
+  const visitsText = visitor.visits > 1 ? `(${visitor.visits}ª visita)` : '';
+  const numText = visitor.visitorNumber ? `visitante #${visitor.visitorNumber.toLocaleString('pt-BR')} ${visitsText}` : '';
   
   return (
     <footer className={styles.footer}>
       <div className={styles.container}>
-        <div className={styles.socials}>
-          {socials.map((social) => (
-            <a
-              key={social.label}
-              href={social.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.socialLink}
-              aria-label={social.label}
-            >
-              {social.label}
-            </a>
-          ))}
-        </div>
+        {numText && (
+          <p className={styles.visitorInfo}>{numText}</p>
+        )}
         <p className={styles.copyright}>
           &copy; {currentYear} Projetado e Desenvolvido por Giovanni Bolsoni. Todos os direitos reservados.
         </p>

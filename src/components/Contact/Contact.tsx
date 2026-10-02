@@ -2,10 +2,12 @@ import { useState, useRef, useEffect } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import styles from './Contact.module.css';
-import { profile, socials } from '../../data/resume';
+import { profile } from '../../data/resume';
 import { i18n } from '../../data/i18n';
 import Icon from '../../Icon';
 import { useScrambleText } from '../../hooks/useScrambleText';
+import { useVisitor } from '../../visitor/useVisitor';
+import { setContactResolved } from '../../visitor/visitorStore';
 
 export const Contact = () => {
   const lang = 'pt';
@@ -14,6 +16,20 @@ export const Contact = () => {
   const containerRef = useRef<HTMLElement>(null);
   const [isTitleVisible, setIsTitleVisible] = useState(false);
   const titleRef = useScrambleText(t.contact, isTitleVisible, { speed: 30, delay: 0 });
+  
+  const visitor = useVisitor();
+  const [typedStatus, setTypedStatus] = useState('');
+  
+  const vNumStr = visitor.visitorNumber ? `#${String(visitor.visitorNumber).padStart(4, '0')}` : '#---';
+  const handle = visitor.handle;
+  
+  useEffect(() => {
+    if (visitor.contactResolved) {
+      setTypedStatus('resolvido ✅');
+    } else {
+      setTypedStatus('aguardando contato ⏳');
+    }
+  }, [visitor.contactResolved]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -57,6 +73,19 @@ export const Contact = () => {
     navigator.clipboard.writeText(profile.email);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+    
+    if (!visitor.contactResolved) {
+      setContactResolved();
+      // Simple typing effect for the status change
+      setTypedStatus('');
+      const finalStr = 'resolvido ✅';
+      let i = 0;
+      const interval = setInterval(() => {
+        setTypedStatus(finalStr.slice(0, i + 1));
+        i++;
+        if (i >= finalStr.length) clearInterval(interval);
+      }, 50);
+    }
   };
 
   return (
@@ -77,20 +106,7 @@ export const Contact = () => {
               {copied ? 'E-mail copiado!' : profile.email}
             </button>
 
-            <div className={styles.socials}>
-              {socials.map((social, idx) => (
-                <a 
-                  key={idx} 
-                  href={social.href} 
-                  target="_blank" 
-                  rel="noreferrer" 
-                  className={styles.socialLink}
-                  aria-label={`Acessar meu ${social.label}`}
-                >
-                  <span className={styles.socialLabel}>{social.label}</span>
-                </a>
-              ))}
-            </div>
+
           </div>
           
           <div className={`${styles.terminalFinal} contact-right`}>
@@ -100,9 +116,9 @@ export const Contact = () => {
               <span className={styles.dot}></span>
             </div>
             <div className={styles.termBody}>
-              <p><span className={styles.prompt}>visitante@giovanni:~$</span> ./check_status.sh</p>
-              <p className={styles.termOutput}>ticket #001 status: resolvido ✅</p>
-              <p><span className={styles.prompt}>visitante@giovanni:~$</span> <span className={styles.cursor}></span></p>
+              <p><span className={styles.prompt}>{handle}@giovanni:~$</span> ./check_status.sh</p>
+              <p className={styles.termOutput}>ticket {vNumStr} aberto por {handle} · status: {typedStatus}</p>
+              <p><span className={styles.prompt}>{handle}@giovanni:~$</span> <span className={styles.cursor}></span></p>
             </div>
           </div>
         </div>
