@@ -1,11 +1,11 @@
-import { useRef, MouseEvent, useState, useEffect } from 'react';
+import { useRef, MouseEvent, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { Code, ExternalLink, Network } from 'lucide-react';
 import styles from './Projects.module.css';
 import { projects } from '../../data/resume';
 import { i18n } from '../../data/i18n';
-import { useScrambleText } from '../../hooks/useScrambleText';
+import { GlitchText } from '../GlitchText/GlitchText';
 
 const ProjectCard = ({ proj }: { proj: any }) => {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -105,22 +105,6 @@ export const Projects = () => {
   const lang = 'pt';
   const t = i18n[lang].commands;
   const containerRef = useRef<HTMLElement>(null);
-  const [isTitleVisible, setIsTitleVisible] = useState(false);
-  const titleRef = useScrambleText(t.projects, isTitleVisible, { speed: 30, delay: 0 });
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsTitleVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    if (containerRef.current) observer.observe(containerRef.current);
-    return () => observer.disconnect();
-  }, []);
 
   useGSAP(() => {
     gsap.from('.proj-card', {
@@ -140,7 +124,7 @@ export const Projects = () => {
     <section className={styles.projects} id="projects" ref={containerRef}>
       <div className={styles.container}>
         <h2 className={styles.title}>
-          <span className={styles.prompt}>~/</span> <span ref={titleRef as any}>{t.projects}</span>
+          <span className={styles.prompt}>~/</span> <GlitchText as="span" text={t.projects} />
         </h2>
         
         <div className={styles.grid}>

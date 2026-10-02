@@ -15,6 +15,7 @@ import {
 import type { Command, CommandContext } from "./types";
 import { escapeHtml, linkify, renderJsonBlock } from "./utils";
 import { getVisitor, setVisitorName, clearVisitor } from "../visitor/visitorStore";
+import { glitchScheduler } from "../components/GlitchText/glitchScheduler";
 
 function formatAbout(): string {
   return [
@@ -225,6 +226,25 @@ export function createCommands(): Command[] {
       description: "troca o tema de cores (theme <nome>)",
       instant: true,
       handler: (ctx) => formatThemeCommand(ctx),
+    },
+    {
+      name: "glitch",
+      description: "controla o efeito de anomalia nos títulos (on/off/status)",
+      handler: (ctx) => {
+        const arg = ctx.args[0]?.toLowerCase();
+        if (arg === "on") {
+          glitchScheduler.setEnabled(true);
+          return `<span class="term-accent">Efeito glitch ativado.</span>`;
+        } else if (arg === "off") {
+          glitchScheduler.setEnabled(false);
+          return `<span class="term-muted">Efeito glitch desativado.</span>`;
+        } else if (arg === "status") {
+          return glitchScheduler.getEnabled() 
+            ? `Status do glitch: <span class="term-accent">ON</span>` 
+            : `Status do glitch: <span class="term-muted">OFF</span>`;
+        }
+        return `<span class="term-error">uso: glitch &lt;on|off|status&gt;</span>`;
+      }
     },
     {
       name: "clear",
