@@ -37,6 +37,7 @@ export class Terminal {
   private draftBeforeHistory = "";
   private isAnimating = false;
   private skipRequested = false;
+  private pendingInputResolver: ((value: string) => void) | null = null;
 
   constructor(root: HTMLElement, options: TerminalOptions = { withTopBar: true }) {
     this.root = root;
@@ -139,7 +140,10 @@ export class Terminal {
     
     if (isReturning && hasName) {
       this.print(`<span class="term-muted">Verificando credenciais de acesso...</span> <span class="term-accent">[${escapeHtml(state.handle.toUpperCase())}]</span>`);
-      const lastSessionStr = state.lastVisit ? `há ${Math.floor((Date.now() - state.lastVisit) / (1000 * 60 * 60 * 24))} dias` : 'recentemente';
+      const diffDays = state.lastVisit ? Math.floor((Date.now() - state.lastVisit) / (1000 * 60 * 60 * 24)) : 0;
+      let lastSessionStr = `há ${diffDays} dias`;
+      if (diffDays === 0) lastSessionStr = 'hoje';
+      else if (diffDays === 1) lastSessionStr = 'ontem';
       this.print(`<span class="term-muted">Bem-vindo de volta, ${escapeHtml(state.name)}. Última sessão: ${lastSessionStr}.</span>`);
     } else if (hasName) {
       this.print(`<span class="term-muted">Verificando credenciais de acesso...</span> <span class="term-accent">[${escapeHtml(state.handle.toUpperCase())}]</span>`);
@@ -147,26 +151,41 @@ export class Terminal {
       this.print(`<span class="term-muted">Verificando credenciais de acesso...</span> <span class="term-accent">[VISITANTE]</span>`);
       await delay(200);
       
-      // Perguntar nome
-      this.print(`login as: _ <span class="term-muted">como posso te chamar? (Enter para pular)</span>`);
-      
-      // Enable input temporary for name
-      if (this.inputEl.parentElement) this.inputEl.parentElement.style.display = '';
-      this.inputEl.readOnly = false;
-      this.inputEl.focus();
-      
-      const name = await this.readInputOnce();
-      this.hideInput();
-      this.inputEl.readOnly = true;
-      
-      if (name.trim()) {
-        const res = setVisitorName(name);
-        if (res.success) {
-          state = getVisitor();
-          this.print(`\n<span class="term-muted">Verificando credenciais de acesso...</span> <span class="term-accent">[${escapeHtml(state.handle.toUpperCase())}]</span>`);
-          this.print(`<span class="term-muted">seu nome fica salvo apenas neste navegador.</span>`);
-        } else if (res.easterEgg) {
-          this.print(`\n<span class="term-error">${escapeHtml(res.easterEgg)}</span>`);
+      let nameAnswered = false;
+      while (!nameAnswered) {
+        this.print(`<span class="term-muted">como posso te chamar? (Enter para pular)</span>`);
+        
+        const promptEl = this.root.querySelector('.prompt');
+        if (promptEl) {
+          promptEl.innerHTML = `login as: `;
+        }
+        
+        if (this.inputEl.parentElement) this.inputEl.parentElement.style.display = '';
+        this.inputEl.readOnly = false;
+        this.inputEl.focus();
+        
+        const rawName = await this.readInputOnce();
+        this.hideInput();
+        this.inputEl.readOnly = true;
+        
+        this.print(`<span class="prompt">login as: </span><span class="cmd-echo">${escapeHtml(rawName)}</span>`);
+        
+        if (rawName.trim()) {
+          const res = setVisitorName(rawName);
+          if (res.success) {
+            state = getVisitor();
+            this.print(`\n<span class="term-muted">Verificando credenciais de acesso...</span> <span class="term-accent">[${escapeHtml(state.handle.toUpperCase())}]</span>`);
+            this.print(`<span class="term-muted">seu nome fica salvo apenas neste navegador.</span>`);
+            nameAnswered = true;
+          } else if (res.easterEgg) {
+            this.print(`<span class="term-error">${escapeHtml(res.easterEgg)}</span>`);
+            this.print("");
+          } else if (res.error) {
+            this.print(`<span class="term-error">${escapeHtml(res.error)}</span>`);
+            this.print("");
+          }
+        } else {
+          nameAnswered = true;
         }
       }
     }
@@ -201,15 +220,7 @@ export class Terminal {
 
   private readInputOnce(): Promise<string> {
     return new Promise((resolve) => {
-      const handler = (e: KeyboardEvent) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          const val = this.inputEl.value;
-          this.inputEl.removeEventListener('keydown', handler);
-          resolve(val);
-        }
-      };
-      this.inputEl.addEventListener('keydown', handler);
+      this.pendingInputResolver = resolve;
     });
   }
 
@@ -245,6 +256,20 @@ export class Terminal {
     if (this.isAnimating) {
       this.skipRequested = true;
       e.preventDefault();
+      return;
+    }
+
+    if (this.pendingInputResolver) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const val = this.inputEl.value;
+        this.inputEl.value = "";
+        const resolver = this.pendingInputResolver;
+        this.pendingInputResolver = null;
+        resolver(val);
+      } else if (e.key === "ArrowUp" || e.key === "ArrowDown" || e.key === "Tab") {
+        e.preventDefault();
+      }
       return;
     }
 
