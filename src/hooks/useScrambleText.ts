@@ -14,6 +14,11 @@ export function useScrambleText(
     const el = elementRef.current;
     if (!el || !trigger) return;
 
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      el.innerText = originalText;
+      return;
+    }
+
     let iteration = 0;
     let interval: number;
 
