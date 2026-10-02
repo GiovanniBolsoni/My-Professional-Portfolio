@@ -26,6 +26,7 @@ import { NavTransitionOverlay } from './components/NavTransitionOverlay/NavTrans
 import { NetworkBackground } from './components/NetworkBackground/NetworkBackground';
 import { CustomCursor } from './components/CustomCursor/CustomCursor';
 import { useKonamiCode } from './hooks/useKonamiCode';
+import { useScrollLock } from './hooks/useScrollLock';
 import { registerVisit, getVisitor } from './visitor/visitorStore';
 import styles from './App.module.css';
 
@@ -41,6 +42,8 @@ export default function App() {
       window.dispatchEvent(new CustomEvent('set-theme', { detail: { themeName: 'verde-matrix' } }));
     }
   }, [isUnlocked]);
+
+  useScrollLock(isUnlocked);
 
   useEffect(() => {
     // Registra a visita ao iniciar o app
@@ -266,15 +269,7 @@ export default function App() {
             
             <AnimatePresence>
               {showOverlay && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 20 }}
-                  transition={{ duration: 0.3 }}
-                  style={{ position: 'relative', zIndex: 10000 }}
-                >
-                  <TerminalOverlay onClose={() => setShowOverlay(false)} />
-                </motion.div>
+                <TerminalOverlay key="terminal-overlay" onClose={() => setShowOverlay(false)} />
               )}
             </AnimatePresence>
 

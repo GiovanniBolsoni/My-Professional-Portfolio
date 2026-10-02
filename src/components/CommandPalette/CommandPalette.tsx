@@ -1,6 +1,8 @@
 import { useEffect, useState, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { Search, ArrowRight, Monitor, Download, Sun } from 'lucide-react';
 import styles from './CommandPalette.module.css';
+import { useScrollLock } from '../../hooks/useScrollLock';
 
 interface CommandItem {
   id: string;
@@ -14,6 +16,8 @@ export const CommandPalette = () => {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useScrollLock(isOpen);
 
   const toggleTheme = () => {
     // We can dispatch an event or click the theme button. 
@@ -99,9 +103,6 @@ export const CommandPalette = () => {
       setTimeout(() => inputRef.current?.focus(), 50);
       setQuery('');
       setSelectedIndex(0);
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
     }
   }, [isOpen]);
 
@@ -126,8 +127,8 @@ export const CommandPalette = () => {
 
   if (!isOpen) return null;
 
-  return (
-    <div className={styles.overlay} onClick={() => setIsOpen(false)}>
+  return createPortal(
+    <div className={styles.overlay} onClick={() => setIsOpen(false)} data-lenis-prevent="true">
       <div className={styles.palette} onClick={e => e.stopPropagation()}>
         <div className={styles.header}>
           <Search size={18} className={styles.searchIcon} />
@@ -159,6 +160,7 @@ export const CommandPalette = () => {
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
