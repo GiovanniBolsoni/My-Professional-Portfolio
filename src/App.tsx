@@ -7,7 +7,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 import { Header } from './components/Header/Header';
 import { Hero } from './components/Hero/Hero';
+import { LogoTicker } from './components/LogoTicker/LogoTicker';
 import { About } from './components/About/About';
+import { Certifications } from './components/Certifications/Certifications';
+import { GithubHistory } from './components/GithubHistory/GithubHistory';
 import { Projects } from './components/Projects/Projects';
 import { CommandPalette } from './components/CommandPalette/CommandPalette';
 import { Footer } from './components/Footer/Footer';
@@ -114,10 +117,22 @@ export default function App() {
         {!hasBooted ? (
           <motion.div
             key="terminal"
-            initial={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, scale: 1.1, filter: 'blur(10px)' }}
-            transition={{ duration: 0.3, ease: "easeIn" }}
-            style={{ position: 'fixed', inset: 0, zIndex: 9999 }}
+            initial={{ opacity: 1 }}
+            exit={{ 
+              opacity: [1, 0.8, 1, 0], 
+              scale: [1, 1.02, 0.98, 1.1],
+              x: [0, -10, 10, -5, 5, 0],
+              y: [0, 5, -5, 5, -5, 0],
+              skewX: [0, 5, -5, 10, -10, 0],
+              filter: [
+                'hue-rotate(0deg) contrast(100%) blur(0px)', 
+                'hue-rotate(90deg) contrast(200%) blur(2px)', 
+                'hue-rotate(-90deg) contrast(300%) blur(4px)', 
+                'hue-rotate(0deg) contrast(100%) blur(10px)'
+              ]
+            }}
+            transition={{ duration: 0.5, times: [0, 0.2, 0.4, 1], ease: "easeInOut" }}
+            style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'var(--bg)' }}
           >
             <BootTerminal onTransition={handleTransition} />
           </motion.div>
@@ -125,15 +140,35 @@ export default function App() {
           <motion.div
             key="gui"
             className={styles.mainContent}
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+            initial={{ opacity: 0, scaleY: 0.01, filter: 'brightness(300%) contrast(200%) blur(10px)' }}
+            animate={{ 
+              opacity: [0, 1, 1], 
+              scaleY: [0.01, 0.01, 1],
+              filter: [
+                'brightness(300%) contrast(200%) blur(10px)', 
+                'brightness(150%) contrast(150%) blur(2px)', 
+                'blur(0px)'
+              ]
+            }}
+            onAnimationComplete={() => {
+              // Remove filter after animation to fix position:fixed children
+              const gui = document.getElementById('gui-container');
+              if (gui) {
+                gui.style.filter = 'none';
+                gui.style.transform = 'none';
+              }
+            }}
+            id="gui-container"
+            transition={{ duration: 0.6, times: [0, 0.3, 1], ease: "circOut", delay: 0.1 }}
           >
             <Header />
             <main>
               <Hero />
+              <LogoTicker />
               <About />
               <Projects />
+              <Certifications />
+              <GithubHistory />
               <Contact />
             </main>
             
