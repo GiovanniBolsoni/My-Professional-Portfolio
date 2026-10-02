@@ -102,6 +102,7 @@ export const defaultThemeName = "default";
 
 export function applyTheme(theme: Theme): void {
   const root = document.documentElement;
+  root.dataset.mode = theme.name === "light" ? "light" : "dark";
   root.style.setProperty("--bg", theme.background);
   root.style.setProperty("--surface", theme.surface);
   root.style.setProperty("--surface-hover", theme.surfaceHover);

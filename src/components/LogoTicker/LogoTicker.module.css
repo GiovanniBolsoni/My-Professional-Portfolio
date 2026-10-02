@@ -49,8 +49,8 @@
 .marqueeTrack {
   display: flex;
   width: max-content;
-  /* Velocidade da animação. Maior tempo = mais devagar */
-  animation: scroll 15s linear infinite;
+  /* Duração definida via JS, fallback 60s */
+  animation: scroll var(--marquee-duration, 60s) linear infinite;
 }
 
 .marqueeTrack:hover {
@@ -60,60 +60,35 @@
 .marqueeGroup {
   display: flex;
   align-items: center;
-  /* Espaçamento entre os logos. */
-  gap: 64px;
+  /* Espaçamento entre os logos no desktop */
+  gap: 72px;
   /* O padding-right igual ao gap garante que o espaço entre o fim do primeiro grupo e 
-     o início do segundo seja igual ao espaço entre as logos, equilibrando a matemática 
-     para o translate(-50%) */
-  padding-right: 64px;
+     o início do segundo seja igual ao espaço entre as logos */
+  padding-right: 72px;
 }
 
 .logoItem {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.customIconWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 50px;
-  width: 50px;
-  background-color: #242938;
-  border-radius: 12px;
-  padding: 8px;
-  /* skillicons.dev has a subtle inner glow / shadow */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
-
-.customIconWrapper .logoImage {
-  height: 100%;
-  width: 100%;
-  object-fit: contain;
-  /* We remove the outer drop shadow because the wrapper has it */
-  filter: grayscale(100%) opacity(0.6);
-  transition: filter 0.3s ease, transform 0.3s ease;
-}
-
-.logoItem:hover .customIconWrapper .logoImage {
-  filter: grayscale(0%) opacity(1);
-  transform: scale(1.1);
+  width: 56px;
+  height: 56px;
 }
 
 .logoImage {
-  /* Altura padrão dos logos (40-60px) */
-  height: 50px;
-  width: auto;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
-  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2)) grayscale(100%) opacity(0.6);
-  transition: filter 0.3s ease, transform 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
-.logoItem:hover > .logoImage {
-  /* Colorido e 100% visível no hover */
-  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2)) grayscale(0%) opacity(1);
-  transform: scale(1.1);
+.logoItem:hover .logoImage {
+  transform: scale(1.12);
+}
+
+/* Inversão para logos pretos (monochrome) no modo escuro */
+:global([data-mode="dark"]) .logoMono {
+  filter: invert(1);
 }
 
 /* O translate -50% só funciona perfeitamente se a largura for baseada no conteúdo max-content 
@@ -130,8 +105,9 @@
 /* Responsividade e Acessibilidade */
 
 @media (max-width: 768px) {
-  .logoImage {
-    height: 40px;
+  .logoItem {
+    width: 44px;
+    height: 44px;
   }
   .marqueeGroup {
     gap: 48px;
