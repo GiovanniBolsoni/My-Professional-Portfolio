@@ -23,7 +23,6 @@ const SKILLS: Skill[] = [
   { id: "salesforce", name: "Salesforce", customIcon: "/logos/salesforce.svg" },
   { id: "vscode", name: "VS Code" },
   { id: "notion", name: "Notion" },
-  { id: "office", name: "Microsoft Office", customIcon: "/logos/office.svg" },
   { id: "claude-code", name: "Claude Code", customIcon: "/logos/claude-code.svg" }
 ];
 
