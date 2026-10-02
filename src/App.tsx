@@ -5,6 +5,8 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
+ScrollTrigger.clearScrollMemory('manual');
+
 import { Header } from './components/Header/Header';
 import { Hero } from './components/Hero/Hero';
 import { LogoTicker } from './components/LogoTicker/LogoTicker';
@@ -56,7 +58,17 @@ export default function App() {
     };
     
     document.addEventListener('visibilitychange', handleVisibility);
-    return () => document.removeEventListener('visibilitychange', handleVisibility);
+    
+    // Garantir que a página sempre recarregue no topo
+    const handleBeforeUnload = () => {
+      window.scrollTo(0, 0);
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, []);
 
   useEffect(() => {
@@ -229,6 +241,7 @@ export default function App() {
               }
               window.dispatchEvent(new Event('gui-ready'));
               if ((window as any).lenis) {
+                (window as any).lenis.scrollTo(0, { immediate: true });
                 (window as any).lenis.resize();
               }
               ScrollTrigger.refresh();

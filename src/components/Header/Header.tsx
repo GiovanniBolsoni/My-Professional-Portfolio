@@ -3,6 +3,7 @@ import { Moon, Sun } from 'lucide-react';
 import styles from './Header.module.css';
 import { i18n } from '../../data/i18n';
 import { applyTheme, defaultThemeName, themes } from '../../themes/themes';
+import { scrollToTop } from '../../utils/scroll';
 
 export const Header = () => {
   const lang = 'pt'; // To be made dynamic later
@@ -44,7 +45,7 @@ export const Header = () => {
   return (
     <header className={styles.header}>
       <div className={styles.container}>
-        <div className={styles.logo}>&lt;GB/&gt;</div>
+        <a href="/" className={styles.logo} aria-label="Voltar ao topo" onClick={(e) => { e.preventDefault(); scrollToTop(); }}>&lt;GB/&gt;</a>
         
         <div className={styles.actions}>
           <nav className={styles.nav}>
