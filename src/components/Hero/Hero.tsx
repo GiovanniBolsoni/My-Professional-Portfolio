@@ -25,22 +25,16 @@ export const Hero = () => {
 
   useGSAP(() => {
     // Reveal animation
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: 'top 80%',
-      },
-      onStart: () => setAnimationStarted(true)
-    });
+    const handleGuiReady = () => {
+      setAnimationStarted(true);
+      gsap.fromTo('.hero-elem-fade',
+        { y: 40, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1, stagger: 0.2, ease: 'power3.out', delay: 0.2 }
+      );
+    };
 
-    tl.from('.hero-elem-fade', {
-      y: 40,
-      opacity: 0,
-      duration: 1,
-      stagger: 0.2,
-      ease: 'power3.out',
-      delay: 0.2
-    });
+    window.addEventListener('gui-ready', handleGuiReady, { once: true });
+    const timer = setTimeout(handleGuiReady, 2000); // Fail-safe
 
     // Parallax effect on scroll
     gsap.to(textRef.current, {
@@ -53,6 +47,11 @@ export const Hero = () => {
         scrub: true
       }
     });
+
+    return () => {
+      window.removeEventListener('gui-ready', handleGuiReady);
+      clearTimeout(timer);
+    };
   }, { scope: containerRef });
 
   // Mouse move parallax for background
@@ -83,6 +82,11 @@ export const Hero = () => {
     setIsEditingName(false);
   };
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    e.preventDefault();
+    window.dispatchEvent(new CustomEvent('nav-transition', { detail: { targetId } }));
+  };
+
   const currentHour = new Date().getHours();
   const greeting = currentHour < 12 ? 'Bom dia' : currentHour < 18 ? 'Boa tarde' : 'Boa noite';
 
@@ -90,7 +94,7 @@ export const Hero = () => {
     <section className={styles.hero} id="hero" ref={containerRef}>
       <div className={styles.heroBg} ref={bgRef}></div>
       <div className={styles.container} ref={textRef}>
-        <p className={`${styles.greeting} hero-elem-fade`}>
+        <p className={`${styles.greeting} hero-elem-fade`} style={{ opacity: 0 }}>
           {greeting},{' '}
           {visitor.name ? (
             <span className={styles.visitorName}>{visitor.name}</span>
@@ -129,17 +133,17 @@ export const Hero = () => {
           {/* Initial state to avoid jump before JS runs */}
           {profile.name}
         </h1>
-        <h2 className={`${styles.role} hero-elem-fade`}>
+        <h2 className={`${styles.role} hero-elem-fade`} style={{ opacity: 0 }}>
           {roleText}
         </h2>
 
         
-        <div className={`${styles.actions} hero-elem-fade`}>
-          <MagneticButton as="a" href="#projects" className={styles.btnPrimary}>
+        <div className={`${styles.actions} hero-elem-fade`} style={{ opacity: 0 }}>
+          <MagneticButton as="a" href="#projects" onClick={(e: any) => handleNavClick(e, 'projects')} className={styles.btnPrimary}>
             Ver Código
             <ChevronDown size={18} />
           </MagneticButton>
-          <MagneticButton as="a" href="#contact" className={styles.btnSecondary}>
+          <MagneticButton as="a" href="#contact" onClick={(e: any) => handleNavClick(e, 'contact')} className={styles.btnSecondary}>
             Agendar Reunião de Debug
           </MagneticButton>
           <MagneticButton as="a" href={profile.resumePdf} target="_blank" rel="noreferrer" className={styles.btnSecondary}>

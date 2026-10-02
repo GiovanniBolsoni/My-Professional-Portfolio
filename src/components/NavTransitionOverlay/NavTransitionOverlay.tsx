@@ -17,9 +17,14 @@ export const NavTransitionOverlay = () => {
       const tl = gsap.timeline({
         onComplete: () => {
           // Scroll to element
-          const el = document.querySelector(targetId);
+          const targetSelector = targetId.startsWith('#') ? targetId : `#${targetId}`;
+          const el = document.querySelector(targetSelector);
           if (el) {
-            el.scrollIntoView({ behavior: 'auto' });
+            if ((window as any).lenis) {
+              (window as any).lenis.scrollTo(el, { immediate: true, offset: -80 });
+            } else {
+              el.scrollIntoView({ behavior: 'auto' });
+            }
           }
           
           // Flash effect
