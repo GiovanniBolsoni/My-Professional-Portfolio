@@ -9,6 +9,7 @@
   padding-top: 15vh;
   z-index: 9999;
   animation: fadeIn 0.2s ease-out;
+  overscroll-behavior: contain;
 }
 
 @keyframes fadeIn {

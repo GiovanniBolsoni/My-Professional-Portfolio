@@ -10,6 +10,7 @@ import styles from './Certifications.module.css';
 import { certifications } from '../../data/resume';
 import { i18n } from '../../data/i18n';
 import { GlitchText } from '../GlitchText/GlitchText';
+import { useScrollLock } from '../../hooks/useScrollLock';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -19,6 +20,8 @@ export const Certifications = () => {
   const containerRef = useRef<HTMLElement>(null);
   // Use undefined for type safety or specific cert type. For simplicity, any.
   const [selectedCert, setSelectedCert] = useState<any | null>(null);
+
+  useScrollLock(!!selectedCert);
 
   const titleText = t.certifications || 'certificados.list()';
 
@@ -81,6 +84,7 @@ export const Certifications = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedCert(null)}
+              data-lenis-prevent="true"
             >
               <motion.div 
                 className={styles.modalContent}
