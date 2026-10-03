@@ -8,7 +8,8 @@ interface GlitchTextProps {
   as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span' | 'p' | 'div';
   className?: string;
   style?: React.CSSProperties;
-  revealWhenVisible?: boolean;
+  reveal?: boolean;
+  revealTrigger?: boolean;
   revealDelay?: number;
 }
 
@@ -25,16 +26,19 @@ export const GlitchText: React.FC<GlitchTextProps> = ({
   as: Component = 'span',
   className = '',
   style,
-  revealWhenVisible = true,
+  reveal = true,
+  revealTrigger = true,
   revealDelay = 0
 }) => {
   const rootRef = useRef<HTMLElement>(null);
-  const [isRevealing, setIsRevealing] = useState(revealWhenVisible);
+  
+  const [isRevealing, setIsRevealing] = useState(() => reveal && !revealTrigger);
+  const [hasRevealed, setHasRevealed] = useState(!reveal);
   const [revealIteration, setRevealIteration] = useState(0);
+  
   const [glitchState, setGlitchState] = useState<Map<number, string>>(new Map());
-  const [hasRevealed, setHasRevealed] = useState(false);
+  const [isBurst, setIsBurst] = useState(false);
 
-  // Split text into words and chars for rendering
   const structure = useMemo(() => {
     let charIndex = 0;
     const words = text.split(' ').map((word) => {
@@ -48,66 +52,60 @@ export const GlitchText: React.FC<GlitchTextProps> = ({
     return { words, totalChars: charIndex - 1 };
   }, [text]);
 
-  // Reveal logic
   useEffect(() => {
-    if (!isRevealing || hasRevealed) return;
-
+    if (!reveal || hasRevealed) return;
+    
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setIsRevealing(false);
       setHasRevealed(true);
       return;
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          const startReveal = () => {
-            let iteration = 0;
-            const interval = setInterval(() => {
-              playTypingSound();
-              setRevealIteration(iteration);
-              
-              if (iteration >= structure.totalChars) {
-                clearInterval(interval);
-                setIsRevealing(false);
-                setHasRevealed(true);
-              }
-              iteration += 1 / 3;
-            }, 30);
-          };
-
-          if (revealDelay > 0) {
-            setTimeout(startReveal, revealDelay);
-          } else {
-            startReveal();
-          }
+    if (revealTrigger) {
+      let interval: number;
+      
+      const startReveal = () => {
+        setIsRevealing(true);
+        let iteration = 0;
+        interval = window.setInterval(() => {
+          playTypingSound();
+          setRevealIteration(iteration);
           
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
+          if (iteration >= structure.totalChars) {
+            clearInterval(interval);
+            setIsRevealing(false);
+            setHasRevealed(true);
+          }
+          iteration += 1 / 3;
+        }, 30);
+      };
 
-    if (rootRef.current) {
-      observer.observe(rootRef.current);
+      const timer = window.setTimeout(startReveal, revealDelay);
+
+      return () => {
+        clearTimeout(timer);
+        if (interval) clearInterval(interval);
+      };
     }
+  }, [reveal, revealTrigger, hasRevealed, structure.totalChars, revealDelay]);
 
-    return () => observer.disconnect();
-  }, [isRevealing, hasRevealed, structure.totalChars, revealDelay]);
+  const timeoutRef = useRef<number | null>(null);
 
-  // Register with scheduler after reveal
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
   useEffect(() => {
     if (!hasRevealed || !rootRef.current) return;
 
     const instance = {
       getTextLength: () => structure.totalChars,
-      triggerGlitch: (indices: number[], chars: string[], duration: number) => {
-        // Map chars using leetspeak occasionally
+      triggerGlitch: (indices: number[], chars: string[], duration: number, burst: boolean) => {
         const newGlitchState = new Map<number, string>();
         indices.forEach((globalIndex, i) => {
-          let replaceChar = chars[i]; // default random symbol
-          
-          // Try to get original char
+          let replaceChar = chars[i];
           let origChar = '';
           for (const word of structure.words) {
             const found = word.find(c => c.globalIndex === globalIndex);
@@ -127,9 +125,12 @@ export const GlitchText: React.FC<GlitchTextProps> = ({
         });
 
         setGlitchState(newGlitchState);
+        setIsBurst(burst);
 
-        setTimeout(() => {
+        if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+        timeoutRef.current = window.setTimeout(() => {
           setGlitchState(new Map());
+          setIsBurst(false);
         }, duration);
       }
     };
@@ -144,7 +145,6 @@ export const GlitchText: React.FC<GlitchTextProps> = ({
   }, [hasRevealed, structure]);
 
   const renderChar = (char: string, globalIndex: number) => {
-    // Handling Reveal
     if (isRevealing) {
       if (globalIndex < revealIteration) {
         return <span key={globalIndex} className={styles.char}>{char}</span>;
@@ -153,7 +153,6 @@ export const GlitchText: React.FC<GlitchTextProps> = ({
       return <span key={globalIndex} className={styles.char}>{randomRevealChar}</span>;
     }
 
-    // Handling Glitch
     const glitchedChar = glitchState.get(globalIndex);
     if (glitchedChar) {
       return (
@@ -167,14 +166,15 @@ export const GlitchText: React.FC<GlitchTextProps> = ({
       );
     }
 
-    // Normal char
     return <span key={globalIndex} className={styles.char}>{char}</span>;
   };
+
+  const burstClass = isBurst ? styles.burstMode : '';
 
   return (
     <Component 
       ref={rootRef as any} 
-      className={`${styles.glitchContainer} ${className}`} 
+      className={`${styles.glitchContainer} ${burstClass} ${className}`} 
       style={style}
       aria-label={text}
     >

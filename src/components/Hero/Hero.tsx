@@ -130,7 +130,8 @@ export const Hero = () => {
           as="h1" 
           className={styles.name} 
           text={profile.name} 
-          revealWhenVisible={animationStarted} 
+          reveal={true}
+          revealTrigger={animationStarted}
           revealDelay={600} 
         />
         <GlitchText 
@@ -138,7 +139,7 @@ export const Hero = () => {
           className={`${styles.role} hero-elem-fade`} 
           style={{ opacity: 0 }} 
           text={roleText} 
-          revealWhenVisible={false} 
+          reveal={false} 
         />
 
         

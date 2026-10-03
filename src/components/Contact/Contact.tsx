@@ -14,6 +14,7 @@ export const Contact = () => {
   const t = i18n[lang].commands;
   const [copied, setCopied] = useState(false);
   const containerRef = useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
   
   const visitor = useVisitor();
   const [typedStatus, setTypedStatus] = useState('');
@@ -34,6 +35,7 @@ export const Contact = () => {
       scrollTrigger: {
         trigger: containerRef.current,
         start: 'top 80%',
+        onEnter: () => setIsVisible(true)
       },
       x: -50,
       opacity: 0,
@@ -76,7 +78,7 @@ export const Contact = () => {
     <section className={styles.contact} id="contact" ref={containerRef}>
       <div className={styles.container}>
         <h2 className={styles.title}>
-          <span className={styles.prompt}>&gt;</span> <GlitchText as="span" text={t.contact} />
+          <span className={styles.prompt}>&gt;</span> <GlitchText as="span" text={t.contact} reveal={true} revealTrigger={isVisible} />
         </h2>
         
         <div className={styles.content}>

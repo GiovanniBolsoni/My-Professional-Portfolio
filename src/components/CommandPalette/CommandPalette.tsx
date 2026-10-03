@@ -29,20 +29,29 @@ export const CommandPalette = () => {
 
   const commands: CommandItem[] = [
     {
-      id: 'projects',
-      icon: <Monitor size={16} />,
-      label: 'Ir para Projetos',
-      action: () => {
-        document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
-        setIsOpen(false);
-      }
-    },
-    {
       id: 'about',
       icon: <ArrowRight size={16} />,
       label: 'Ir para Sobre Mim',
       action: () => {
-        document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+        window.dispatchEvent(new CustomEvent('nav-transition', { detail: { targetId: '#about' } }));
+        setIsOpen(false);
+      }
+    },
+    {
+      id: 'projects',
+      icon: <Monitor size={16} />,
+      label: 'Ir para Projetos',
+      action: () => {
+        window.dispatchEvent(new CustomEvent('nav-transition', { detail: { targetId: '#projects' } }));
+        setIsOpen(false);
+      }
+    },
+    {
+      id: 'certifications',
+      icon: <ArrowRight size={16} />,
+      label: 'Ir para Certificados',
+      action: () => {
+        window.dispatchEvent(new CustomEvent('nav-transition', { detail: { targetId: '#certifications' } }));
         setIsOpen(false);
       }
     },
@@ -51,7 +60,7 @@ export const CommandPalette = () => {
       icon: <ArrowRight size={16} />,
       label: 'Ir para Contato',
       action: () => {
-        document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+        window.dispatchEvent(new CustomEvent('nav-transition', { detail: { targetId: '#contact' } }));
         setIsOpen(false);
       }
     },

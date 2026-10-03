@@ -30,11 +30,13 @@ import { useScrollLock } from './hooks/useScrollLock';
 import { registerVisit, getVisitor } from './visitor/visitorStore';
 import styles from './App.module.css';
 
+import { BreachTransition } from './components/BreachTransition/BreachTransition';
+// ... (imports remain)
+
 export default function App() {
-  const [hasBooted, setHasBooted] = useState(() => {
-    return !!sessionStorage.getItem('portfolio-booted');
-  });
+  const [hasBooted, setHasBooted] = useState(() => !!sessionStorage.getItem('portfolio-booted'));
   const [showOverlay, setShowOverlay] = useState(false);
+  const [isBreaching, setIsBreaching] = useState(false);
   const { isUnlocked, resetKonami } = useKonamiCode();
 
   useEffect(() => {
@@ -46,15 +48,17 @@ export default function App() {
   useScrollLock(isUnlocked);
 
   useEffect(() => {
-    // Registra a visita ao iniciar o app
+    const handleBreachStart = () => {
+      setIsBreaching(true);
+    };
+    window.addEventListener('breach-start', handleBreachStart);
+
     registerVisit().catch(console.error);
 
     const handleVisibility = () => {
       if (document.hidden) {
         const v = getVisitor();
-        if (v.name) {
-          document.title = `Volta aqui, ${v.name} 👀`;
-        }
+        if (v.name) document.title = `Volta aqui, ${v.name} 👀`;
       } else {
         document.title = 'Giovanni Bolsoni | Software Engineer';
       }
@@ -62,13 +66,11 @@ export default function App() {
     
     document.addEventListener('visibilitychange', handleVisibility);
     
-    // Garantir que a página sempre recarregue no topo
-    const handleBeforeUnload = () => {
-      window.scrollTo(0, 0);
-    };
+    const handleBeforeUnload = () => window.scrollTo(0, 0);
     window.addEventListener('beforeunload', handleBeforeUnload);
     
     return () => {
+      window.removeEventListener('breach-start', handleBreachStart);
       document.removeEventListener('visibilitychange', handleVisibility);
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
@@ -81,27 +83,17 @@ export default function App() {
       applyTheme(themes[defaultThemeName]);
     }
 
-    // Setup smooth scroll and GSAP sync
-    const lenis = new Lenis({
-      lerp: 0.1,
-      smoothWheel: true,
-    });
-    
+    const lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
     (window as any).lenis = lenis;
-
     lenis.on('scroll', ScrollTrigger.update);
 
-    const raf = (time: number) => {
-      lenis.raf(time * 1000);
-    };
-
+    const raf = (time: number) => lenis.raf(time * 1000);
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
     
     window.addEventListener('load', () => ScrollTrigger.refresh());
     document.fonts.ready.then(() => ScrollTrigger.refresh());
 
-    // Easter egg for developers
     const easterEgg = `
   ███████████████████████████
   ███████▀▀▀      ▀▀▀███████
@@ -121,32 +113,32 @@ export default function App() {
   ███████             ███████
   
   [!] ACESSO NÃO AUTORIZADO DETECTADO [!]
-  
   Ah, vejo que você é um desenvolvedor explorando o código-fonte...
-  Gosta de olhar por baixo do capô, não é?
-  
-  Que tal pularmos a etapa do RH e falarmos direto de tecnologia?
   Me mande um email e vamos conversar: giovani.soares@example.com
   `;
     
-    // Only print once
     if (!window.hasOwnProperty('easterEggPrinted')) {
       console.log('%c' + easterEgg, 'color: #00ff00; font-family: monospace; font-size: 12px; font-weight: bold; text-shadow: 0 0 5px #00ff00;');
       (window as any).easterEggPrinted = true;
+    }
+
+    // When loading the page already booted, dispatch gui-ready.
+    // If not booted, BreachTransition will dispatch it during decrypt phase.
+    if (hasBooted && !isBreaching) {
+      setTimeout(() => window.dispatchEvent(new Event('gui-ready')), 100);
     }
 
     return () => {
       gsap.ticker.remove(raf);
       lenis.destroy();
     };
-  }, []);
+  }, [hasBooted, isBreaching]);
 
   const handleTransition = () => {
     sessionStorage.setItem('portfolio-booted', 'true');
     setHasBooted(true);
     setShowOverlay(false);
     
-    // Check if returning visitor for toast
     const v = getVisitor();
     if (v.visits > 1 && v.name) {
       const toast = document.createElement('div');
@@ -154,7 +146,6 @@ export default function App() {
       toast.innerHTML = `Bom te ver de novo, ${v.name} (${v.visits}ª visita)`;
       document.body.appendChild(toast);
       
-      // Setup simple style inline since it's just a toast
       toast.style.position = 'fixed';
       toast.style.bottom = '20px';
       toast.style.left = '50%';
@@ -191,67 +182,31 @@ export default function App() {
       <CustomCursor />
       <NavTransitionOverlay />
       <div className={styles.noiseOverlay}></div>
-      <AnimatePresence mode="wait">
-        {!hasBooted ? (
-          <motion.div
-            key="terminal"
-            initial={{ opacity: 1 }}
-            exit={{ 
-              opacity: [1, 0.8, 1, 0], 
-              scale: [1, 1.02, 0.98, 1.1],
-              x: [0, -10, 10, -5, 5, 0],
-              y: [0, 5, -5, 5, -5, 0],
-              skewX: [0, 5, -5, 10, -10, 0],
-              filter: [
-                'hue-rotate(0deg) contrast(100%) blur(0px)', 
-                'hue-rotate(90deg) contrast(200%) blur(2px)', 
-                'hue-rotate(-90deg) contrast(300%) blur(4px)', 
-                'hue-rotate(0deg) contrast(100%) blur(10px)'
-              ]
-            }}
-            transition={{ duration: 0.5, times: [0, 0.2, 0.4, 1], ease: "easeInOut" }}
-            style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'var(--bg)' }}
-          >
-            <BootTerminal onTransition={handleTransition} />
-          </motion.div>
-        ) : (
-          <motion.div
-            key="gui"
-            className={styles.mainContent}
-            initial={
-              window.matchMedia('(prefers-reduced-motion: reduce)').matches
-                ? { opacity: 0 }
-                : { opacity: 0, clipPath: 'inset(49.5% 0 49.5% 0)', filter: 'brightness(300%) contrast(200%) blur(10px)' }
-            }
-            animate={
-              window.matchMedia('(prefers-reduced-motion: reduce)').matches
-                ? { opacity: 1 }
-                : { 
-                    opacity: [0, 1, 1], 
-                    clipPath: ['inset(49.5% 0 49.5% 0)', 'inset(49.5% 0 49.5% 0)', 'inset(0% 0 0% 0)'],
-                    filter: [
-                      'brightness(300%) contrast(200%) blur(10px)', 
-                      'brightness(150%) contrast(150%) blur(2px)', 
-                      'blur(0px)'
-                    ]
-                  }
-            }
-            onAnimationComplete={() => {
-              const gui = document.getElementById('gui-container');
-              if (gui) {
-                gui.style.filter = 'none';
-                gui.style.clipPath = 'none';
-              }
+      
+      {isBreaching && (
+        <BreachTransition 
+          onDecryptStart={() => {
+            handleTransition();
+            setTimeout(() => {
               window.dispatchEvent(new Event('gui-ready'));
               if ((window as any).lenis) {
                 (window as any).lenis.scrollTo(0, { immediate: true });
                 (window as any).lenis.resize();
               }
               ScrollTrigger.refresh();
-            }}
-            id="gui-container"
-            transition={{ duration: 0.6, times: [0, 0.3, 1], ease: "circOut", delay: 0.1 }}
-          >
+            }, 50);
+          }}
+          onComplete={() => setIsBreaching(false)}
+        />
+      )}
+
+      <AnimatePresence mode="wait">
+        {!hasBooted ? (
+          <div key="terminal" style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'var(--bg)' }}>
+            <BootTerminal onTransition={handleTransition} />
+          </div>
+        ) : (
+          <div key="gui" className={styles.mainContent} id="gui-container">
             <Header />
             <main>
               <Hero />
@@ -290,7 +245,7 @@ export default function App() {
                 </motion.div>
               )}
             </AnimatePresence>
-          </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </div>

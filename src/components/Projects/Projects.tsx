@@ -105,12 +105,14 @@ export const Projects = () => {
   const lang = 'pt';
   const t = i18n[lang].commands;
   const containerRef = useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useGSAP(() => {
     gsap.from('.proj-card', {
       scrollTrigger: {
         trigger: containerRef.current,
         start: 'top 80%',
+        onEnter: () => setIsVisible(true)
       },
       y: 60,
       opacity: 0,
@@ -124,7 +126,7 @@ export const Projects = () => {
     <section className={styles.projects} id="projects" ref={containerRef}>
       <div className={styles.container}>
         <h2 className={styles.title}>
-          <span className={styles.prompt}>~/</span> <GlitchText as="span" text={t.projects} />
+          <span className={styles.prompt}>~/</span> <GlitchText as="span" text={t.projects} reveal={true} revealTrigger={isVisible} />
         </h2>
         
         <div className={styles.grid}>

@@ -9,12 +9,14 @@ import { GlitchText } from '../GlitchText/GlitchText';
 export const About = () => {
   const containerRef = useRef<HTMLElement>(null);
   const [activeTab, setActiveTab] = useState<'journey' | 'edu' | 'stack'>('journey');
+  const [isVisible, setIsVisible] = useState(false);
 
   useGSAP(() => {
     gsap.from('.about-elem', {
       scrollTrigger: {
         trigger: containerRef.current,
         start: 'top 80%',
+        onEnter: () => setIsVisible(true)
       },
       y: 40,
       opacity: 0,
@@ -31,7 +33,7 @@ export const About = () => {
           {/* Coluna Esquerda: Texto e Stats */}
           <div className={styles.leftCol}>
             <h2 className={`${styles.title} about-elem`}>
-              <span className={styles.prompt}>~/</span> <GlitchText as="span" text="sobre_mim" />
+              <span className={styles.prompt}>~/</span> <GlitchText as="span" text="sobre_mim" reveal={true} revealTrigger={isVisible} />
             </h2>
             
             <div className={`${styles.textBlock} about-elem`}>

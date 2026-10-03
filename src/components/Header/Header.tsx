@@ -49,10 +49,23 @@ export const Header = () => {
         
         <div className={styles.actions}>
           <nav className={styles.nav}>
-            <a href="#about" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('nav-transition', { detail: { targetId: '#about' } })); }}>{t.about}</a>
-            <a href="#experience" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('nav-transition', { detail: { targetId: '#experience' } })); }}>{t.experience}</a>
-            <a href="#projects" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('nav-transition', { detail: { targetId: '#projects' } })); }}>{t.projects}</a>
-            <a href="#contact" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('nav-transition', { detail: { targetId: '#contact' } })); }}>{t.contact}</a>
+            {[
+              { id: 'about', label: t.about },
+              { id: 'projects', label: t.projects },
+              { id: 'certifications', label: t.navCertifications },
+              { id: 'contact', label: t.contact }
+            ].map(item => (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.dispatchEvent(new CustomEvent('nav-transition', { detail: { targetId: `#${item.id}` } }));
+                }}
+              >
+                {item.label}
+              </a>
+            ))}
           </nav>
 
           <div className={styles.socialNav}>

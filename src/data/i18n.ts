@@ -13,6 +13,7 @@ export const i18n = {
       stack: "Habilidades",
       education: "Educação",
       certifications: "Certificações",
+      navCertifications: "Certificados",
       github: "Histórico de Commits",
       contact: "Contato"
     }
@@ -29,6 +30,7 @@ export const i18n = {
       stack: "Stack",
       education: "Education",
       certifications: "Certifications",
+      navCertifications: "Certifications",
       github: "GitHub History",
       contact: "Contact"
     }

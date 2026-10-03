@@ -1,7 +1,7 @@
 
 
 export type GlitchInstance = {
-  triggerGlitch: (indices: number[], chars: string[], duration: number) => void;
+  triggerGlitch: (indices: number[], chars: string[], duration: number, burst: boolean) => void;
   getTextLength: () => number;
 };
 
@@ -100,11 +100,7 @@ class GlitchScheduler {
     const selection = window.getSelection();
     if (selection && selection.toString().length > 0) return true;
 
-    // Check if any modal/overlay is open
-    // A simple way is to check for specific overlay selectors
-    if (document.querySelector('[class*="TerminalOverlay_overlay"]')) return true;
-    if (document.querySelector('[class*="CommandPalette_overlay"]')) return true;
-    if (document.querySelector('[class*="Certifications_modal"]')) return true;
+    if (document.documentElement.dataset.modalOpen === 'true') return true;
 
     return false;
   }
@@ -113,8 +109,10 @@ class GlitchScheduler {
     this.stop();
     if (!this.isEnabled) return;
 
-    const minDelay = this.isMatrix ? 3000 : 5000;
-    const maxDelay = this.isMatrix ? 7000 : 12000;
+    // Aumentar os intervalos da anomalia no glitchScheduler.ts: de 1.2s a 3.5s
+    // A não ser no tema verde-matrix onde deve ser de 0.6s a 2.0s
+    const minDelay = this.isMatrix ? 600 : 1200;
+    const maxDelay = this.isMatrix ? 2000 : 3500;
     const delay = Math.random() * (maxDelay - minDelay) + minDelay;
 
     this.timer = window.setTimeout(() => this.tick(), delay);
@@ -126,28 +124,26 @@ class GlitchScheduler {
       return;
     }
 
-    // Find all currently visible instances that are not being hovered
     const visibleInstances: { el: Element, instance: GlitchInstance }[] = [];
     
     this.instances.forEach((instance, el) => {
       const rect = el.getBoundingClientRect();
       const isVisible = (
-        rect.top >= 0 &&
-        rect.left >= 0 &&
-        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        rect.top >= -rect.height &&
+        rect.left >= -rect.width &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) + rect.height &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth) + rect.width
       );
 
-      // Check hover
       const isHovered = el.matches(':hover');
 
+      // Add to visible instances if actually on screen (we tolerate a bit of margin)
       if (isVisible && !isHovered) {
         visibleInstances.push({ el, instance });
       }
     });
 
     if (visibleInstances.length > 0) {
-      // Pick one random instance
       const target = visibleInstances[Math.floor(Math.random() * visibleInstances.length)];
       this.executeGlitch(target.instance);
     }
@@ -159,15 +155,13 @@ class GlitchScheduler {
     const len = instance.getTextLength();
     if (len === 0) return;
 
-    // 10% chance for a big glitch (30-40% of characters)
-    // 90% chance for a small glitch (1-3 characters)
-    const isBig = Math.random() < 0.1;
+    // 20% chance for a big glitch (pico de invasão)
+    const isBig = Math.random() < 0.2;
     
     const count = isBig 
       ? Math.max(2, Math.floor(len * (0.3 + Math.random() * 0.1))) 
       : Math.floor(Math.random() * 3) + 1;
 
-    // Pick random unique indices
     const indices = new Set<number>();
     let attempts = 0;
     while (indices.size < count && attempts < len * 2) {
@@ -178,10 +172,9 @@ class GlitchScheduler {
     const indicesArr = Array.from(indices);
     const chars = indicesArr.map(() => this.getRandomChar());
     
-    // Duration: 60-120ms per tick, 2-4 ticks for small, up to 300ms for big
     const duration = isBig ? 300 : (Math.floor(Math.random() * 3) + 2) * (Math.floor(Math.random() * 60) + 60);
 
-    instance.triggerGlitch(indicesArr, chars, duration);
+    instance.triggerGlitch(indicesArr, chars, duration, isBig);
   }
 
   private getRandomChar(): string {

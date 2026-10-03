@@ -43,3 +43,17 @@
   80% { transform: translate(1px, -1px) }
   100% { transform: translate(0) }
 }
+
+.burstMode .glitched::after {
+  color: #fff;
+  text-shadow: 3px 0 0 red, -3px 0 0 blue;
+  animation: burst-anim 0.1s linear infinite;
+}
+
+@keyframes burst-anim {
+  0% { transform: translate(0) scale(1) }
+  25% { transform: translate(-2px, 2px) scale(1.05) }
+  50% { transform: translate(-2px, -2px) scale(0.95) }
+  75% { transform: translate(2px, 2px) scale(1.05) }
+  100% { transform: translate(2px, -2px) scale(1) }
+}

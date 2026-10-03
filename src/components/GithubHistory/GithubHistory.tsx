@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { GitHubCalendar } from 'react-github-calendar';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
@@ -11,12 +11,14 @@ export const GithubHistory = () => {
   const lang = 'pt';
   const t = i18n[lang].commands;
   const containerRef = useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useGSAP(() => {
     gsap.from('.github-content', {
       scrollTrigger: {
         trigger: containerRef.current,
         start: 'top 80%',
+        onEnter: () => setIsVisible(true)
       },
       y: 40,
       opacity: 0,
@@ -29,7 +31,7 @@ export const GithubHistory = () => {
     <section className={styles.githubSection} id="github" ref={containerRef}>
       <div className={styles.container}>
         <h2 className={styles.title}>
-          <span className={styles.prompt}>~/</span> <GlitchText as="span" text={t.github} />
+          <span className={styles.prompt}>~/</span> <GlitchText as="span" text={t.github} reveal={true} revealTrigger={isVisible} />
         </h2>
         
         <div className={`${styles.calendarWrapper} github-content`}>

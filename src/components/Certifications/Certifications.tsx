@@ -20,6 +20,7 @@ export const Certifications = () => {
   const containerRef = useRef<HTMLElement>(null);
   // Use undefined for type safety or specific cert type. For simplicity, any.
   const [selectedCert, setSelectedCert] = useState<any | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useScrollLock(!!selectedCert);
 
@@ -27,6 +28,11 @@ export const Certifications = () => {
 
   useGSAP(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      ScrollTrigger.create({
+        trigger: containerRef.current,
+        start: 'top 80%',
+        onEnter: () => setIsVisible(true)
+      });
       return;
     }
 
@@ -36,6 +42,7 @@ export const Certifications = () => {
       interval: 0.1,
       batchMax: 3,
       onEnter: (batch) => {
+        setIsVisible(true);
         gsap.to(batch, {
           y: 0,
           opacity: 1,
@@ -53,7 +60,7 @@ export const Certifications = () => {
     <section className={styles.certs} id="certifications" ref={containerRef}>
       <div className={styles.container}>
         <h2 className={styles.title}>
-          <span className={styles.prompt}>&gt;</span> <GlitchText as="span" text={titleText} />
+          <span className={styles.prompt}>&gt;</span> <GlitchText as="span" text={titleText} reveal={true} revealTrigger={isVisible} />
         </h2>
         
         <div className={styles.grid}>

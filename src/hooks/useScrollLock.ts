@@ -10,6 +10,7 @@ export function useScrollLock(isLocked: boolean) {
     lockCount++;
 
     if (lockCount === 1) {
+      document.documentElement.dataset.modalOpen = 'true';
       originalPaddingRight = document.documentElement.style.paddingRight;
       const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
       
@@ -27,6 +28,7 @@ export function useScrollLock(isLocked: boolean) {
       lockCount--;
 
       if (lockCount === 0) {
+        document.documentElement.dataset.modalOpen = 'false';
         document.documentElement.style.overflow = '';
         document.documentElement.style.paddingRight = originalPaddingRight;
         
