@@ -28,8 +28,8 @@ const SKILLS: Skill[] = [
   { id: "notion", name: "Notion", src: "/logos/notion.svg", monochrome: true },
   { id: "office", name: "Microsoft Office", src: "/logos/office.svg" },
   { id: "claude-code", name: "Claude Code", src: "/logos/claude-code.svg" },
-  { id: "govbr", name: "Gov.br", src: "/logos/govbr.png" },
-  { id: "credly", name: "Credly", src: "/logos/credly.png" }
+  { id: "govbr", name: "Gov.br", src: "/logos/govbr.png", scale: 1.2 },
+  { id: "credly", name: "Credly", src: "/logos/credly.png", scale: 1.2 }
 ];
 
 if (import.meta.env.DEV) {
