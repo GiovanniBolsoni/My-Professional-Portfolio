@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { Search, ArrowRight, Monitor, Download, Sun } from 'lucide-react';
+import { Search, ArrowRight, Monitor, Download, Sun, Github } from 'lucide-react';
 import styles from './CommandPalette.module.css';
 import { useScrollLock } from '../../hooks/useScrollLock';
 
@@ -52,6 +52,15 @@ export const CommandPalette = () => {
       label: 'Ir para Certificados',
       action: () => {
         window.dispatchEvent(new CustomEvent('nav-transition', { detail: { targetId: '#certifications' } }));
+        setIsOpen(false);
+      }
+    },
+    {
+      id: 'github',
+      icon: <Github size={16} />,
+      label: 'Ir para Commits',
+      action: () => {
+        window.dispatchEvent(new CustomEvent('nav-transition', { detail: { targetId: '#github' } }));
         setIsOpen(false);
       }
     },

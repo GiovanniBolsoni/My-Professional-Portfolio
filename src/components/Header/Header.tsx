@@ -53,6 +53,7 @@ export const Header = () => {
               { id: 'about', label: t.about },
               { id: 'projects', label: t.projects },
               { id: 'certifications', label: t.navCertifications },
+              { id: 'github', label: t.navGithub },
               { id: 'contact', label: t.contact }
             ].map(item => (
               <a
