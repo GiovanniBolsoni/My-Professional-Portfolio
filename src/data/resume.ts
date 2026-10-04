@@ -138,7 +138,7 @@ export const experiences: Experience[] = [
 export const education: Education = {
   course: 'Análise e Desenvolvimento de Sistemas (ADS)',
   institution: 'Universidade São Judas Tadeu',
-  status: 'Julho 2024 - Presente ⏳',
+  status: '2026 - Concluído ✅',
   description:
     'Formação focada em <strong>Engenharia de Software e Desenvolvimento Full-Stack</strong>. Sólidos conhecimentos em Lógica de Programação, Orientação a Objetos (Java), Modelagem de Dados SQL e Metodologias Ágeis. Capacidade técnica para análise de requisitos e entrega de soluções escaláveis voltadas às necessidades do mercado.',
   subjects: [
