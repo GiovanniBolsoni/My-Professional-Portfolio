@@ -109,10 +109,10 @@ class GlitchScheduler {
     this.stop();
     if (!this.isEnabled) return;
 
-    // Aumentar os intervalos da anomalia no glitchScheduler.ts: de 1.2s a 3.5s
-    // A não ser no tema verde-matrix onde deve ser de 0.6s a 2.0s
-    const minDelay = this.isMatrix ? 600 : 1200;
-    const maxDelay = this.isMatrix ? 2000 : 3500;
+    // Glitch mais frequente: de 0.8s a 2.0s
+    // No tema verde-matrix: 0.4s a 1.2s
+    const minDelay = this.isMatrix ? 400 : 800;
+    const maxDelay = this.isMatrix ? 1200 : 2000;
     const delay = Math.random() * (maxDelay - minDelay) + minDelay;
 
     this.timer = window.setTimeout(() => this.tick(), delay);

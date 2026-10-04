@@ -151,7 +151,7 @@ export const Hero = () => {
           <MagneticButton as="a" href="#contact" onClick={(e: any) => handleNavClick(e, 'contact')} className={styles.btnSecondary}>
             Agendar Reunião de Debug
           </MagneticButton>
-          <MagneticButton as="a" href={profile.resumePdf} target="_blank" rel="noreferrer" className={styles.btnSecondary}>
+          <MagneticButton as="a" href={profile.resumePdf} target="_blank" rel="noreferrer" download="Giovanni_Bolsoni_Fernandes_Curriculo.pdf" className={styles.btnSecondary}>
             <Download size={18} />
             Baixar Currículo
           </MagneticButton>

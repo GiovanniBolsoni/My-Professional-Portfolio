@@ -171,12 +171,45 @@ export const GlitchText: React.FC<GlitchTextProps> = ({
 
   const burstClass = isBurst ? styles.burstMode : '';
 
+  const handleMouseEnter = () => {
+    if (!hasRevealed || !rootRef.current) return;
+    const len = structure.totalChars;
+    if (len === 0) return;
+    
+    // Trigger a burst glitch on hover
+    const count = Math.max(2, Math.floor(len * 0.4));
+    const indices = new Set<number>();
+    let attempts = 0;
+    while (indices.size < count && attempts < len * 2) {
+      indices.add(Math.floor(Math.random() * len));
+      attempts++;
+    }
+    const indicesArr = Array.from(indices);
+    const chars = indicesArr.map(() => SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]);
+    
+    // We can't access `instance.triggerGlitch` directly here easily without ref,
+    // so let's just do the same logic
+    const newGlitchState = new Map<number, string>();
+    indicesArr.forEach((globalIndex, i) => {
+      newGlitchState.set(globalIndex, chars[i]);
+    });
+    setGlitchState(newGlitchState);
+    setIsBurst(true);
+    
+    if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+    timeoutRef.current = window.setTimeout(() => {
+      setGlitchState(new Map());
+      setIsBurst(false);
+    }, 400);
+  };
+
   return (
     <Component 
       ref={rootRef as any} 
       className={`${styles.glitchContainer} ${burstClass} ${className}`} 
       style={style}
       aria-label={text}
+      onMouseEnter={handleMouseEnter}
     >
       <span aria-hidden="true">
         {structure.words.map((word, wIndex) => (

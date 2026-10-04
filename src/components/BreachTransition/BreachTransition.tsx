@@ -152,7 +152,7 @@ export const BreachTransition: React.FC<BreachTransitionProps> = ({ onDecryptSta
 
   if (phase === 'decrypt') {
     return (
-      <div className={styles.container} style={{ pointerEvents: 'none' }}>
+      <div className={styles.container} style={{ pointerEvents: 'none', background: 'transparent' }}>
         <motion.div 
           className={styles.decryptOverlay}
           initial={{ height: '100%' }}

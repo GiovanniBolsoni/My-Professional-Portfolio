@@ -26,7 +26,7 @@ export interface TerminalOptions {
 }
 
 export class Terminal {
-  private root: HTMLElement;
+  public root: HTMLElement;
   private options: TerminalOptions;
   private outputEl!: HTMLDivElement;
   private inputEl!: HTMLInputElement;

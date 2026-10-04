@@ -47,7 +47,7 @@ function formatSocial(): string {
 }
 
 function formatResume(): string {
-  if (profile.resumePdf && profile.resumePdf.startsWith("http")) {
+  if (profile.resumePdf && (profile.resumePdf.startsWith("http") || profile.resumePdf.startsWith("/"))) {
     return `Currículo em PDF: ${linkify(profile.resumePdf)}`;
   }
   return `Currículo em PDF: <span class="term-muted">ainda não disponível (placeholder: ${escapeHtml(
@@ -281,6 +281,15 @@ export function createCommands(): Command[] {
       handler: async (ctx) => {
         ctx.terminal.hideInput();
         ctx.terminal.clearOutput();
+        
+        const overlay = document.createElement("div");
+        overlay.id = "hack-overlay";
+        overlay.style.position = "absolute";
+        overlay.style.inset = "0";
+        overlay.style.backgroundColor = "var(--bg)";
+        overlay.style.zIndex = "999";
+        ctx.terminal.root.appendChild(overlay);
+
         window.dispatchEvent(new CustomEvent('breach-start'));
         return "";
       }

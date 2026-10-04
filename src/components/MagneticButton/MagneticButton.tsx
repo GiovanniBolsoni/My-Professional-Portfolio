@@ -9,6 +9,7 @@ interface MagneticButtonProps {
   href?: string;
   target?: string;
   rel?: string;
+  download?: string;
 }
 
 export const MagneticButton: React.FC<MagneticButtonProps> = ({ 
@@ -18,7 +19,8 @@ export const MagneticButton: React.FC<MagneticButtonProps> = ({
   as = 'button',
   href,
   target,
-  rel
+  rel,
+  download
 }) => {
   const magneticRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -67,6 +69,7 @@ export const MagneticButton: React.FC<MagneticButtonProps> = ({
         href={href}
         target={target}
         rel={rel}
+        download={download}
         style={{ display: 'inline-flex', position: 'relative' }}
       >
         {children}

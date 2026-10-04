@@ -16,6 +16,7 @@ export interface Social {
   label: string;
   href: string;
   icon: string;
+  monochrome?: boolean;
 }
 
 export interface SkillGroup {
@@ -77,7 +78,7 @@ export const profile: Profile = {
   location: 'São Paulo, SP',
   email: 'giovannibolsoni502@gmail.com',
   photo: '/profile.jpg',
-  resumePdf: 'https://drive.google.com/file/d/1R_atrtgxYFmYXBWWv-8B-2dwGwDFLDrX/view?usp=sharing',
+  resumePdf: '/curriculo-giovanni-bolsoni.pdf',
   objective: 'Analista de Sistemas, Suporte Técnico ou Desenvolvedor Web Front-end',
   summary: [
     'Comecei minha carreira em <strong>suporte técnico e atendimento</strong>, onde passei mais de 2 anos resolvendo incidentes sob SLA, documentando soluções via metodologia <strong>KCS</strong> e sendo o elo entre times técnicos e clientes. Foi ali que desenvolvi raciocínio analítico e visão de negócio.',
@@ -86,19 +87,21 @@ export const profile: Profile = {
 };
 
 export const socials: Social[] = [
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/giovanni-bolsoni/', icon: 'linkedin' },
-  { label: 'GitHub', href: 'https://github.com/GiovanniBolsoni', icon: 'github' },
-  { label: 'Instagram', href: 'https://www.instagram.com/_bolsoni_/', icon: 'instagram' },
+  { label: 'GitHub', href: 'https://github.com/GiovanniBolsoni', icon: '/icons/github.svg', monochrome: true },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/giovanni-bolsoni/', icon: '/icons/linkedin.svg' },
+  { label: 'Instagram', href: 'https://www.instagram.com/_bolsoni_/', icon: '/icons/instagram.svg' },
+  { label: 'Notion', href: 'https://giovanni-professional-portfolio.notion.site/Professional-Portfolio-28822110d735804795c7d33e038570d3', icon: '/icons/notion.svg', monochrome: true },
+  { label: 'Credly', href: 'https://www.credly.com/users/giovanni-bolsoni', icon: '/icons/credly.svg' },
 ];
 
 export const skills: SkillGroup[] = [
-  { group: 'Linguagens', items: ['HTML', 'CSS', 'JavaScript', 'Python', 'TypeScript'] },
+  { group: 'Linguagens', items: ['HTML', 'CSS', 'JavaScript', 'Python', 'TypeScript', 'Java'] },
   { group: 'Frameworks', items: ['React', 'Bootstrap', 'Flask'] },
   { group: 'Build & Hosting', items: ['Vite', 'Vercel', 'GitHub'] },
-  { group: 'Dados & Cloud', items: ['Supabase', 'AWS Cloud Practitioner'] },
-  { group: 'Versionamento', items: ['Git', 'GitHub'] },
-  { group: 'Produtividade', items: ['Microsoft Office', 'Notion', 'Jupyter'] },
-  { group: 'Ambiente', items: ['VS Code', 'Windows', 'Claude Code', 'Antigravity'] },
+  { group: 'Dados & Cloud', items: ['APIs REST', 'Supabase', 'AWS Cloud Practitioner'] },
+  { group: 'Ferramentas', items: ['Git', 'GitHub', 'VS Code', 'Notion', 'Antigravity', 'Anthropic', 'Claude Code'] },
+  { group: 'Processos & Metodologias', items: ['Metodologias Ágeis', 'SQL', 'POO'] },
+  { group: 'Produtividade', items: ['Microsoft Office', 'Jupyter'] },
 ];
 
 export const experiences: Experience[] = [
@@ -112,7 +115,7 @@ export const experiences: Experience[] = [
       'Suporte remoto via TeamViewer, com diagnóstico e correção de falhas em sistemas, redes e equipamentos.',
       'Análise e resolução de problemas em sistemas de varejo (PDV): erros de autenticação, instabilidade e falhas de integração.',
       'Uso do console do navegador (F12) para identificar erros técnicos de HTTP, scripts e requisições.',
-      'Registro e documentação de incidentes, contribuindo para a melhoria contínua e prevenção de recorrências.',
+      'Documentação de incidentes pela metodologia KCS, contribuindo para a melhoria contínua dos processos.',
       'Interface com equipes internas para escalonamento e resolução de problemas mais complexos.',
     ],
   },
@@ -135,7 +138,7 @@ export const experiences: Experience[] = [
 export const education: Education = {
   course: 'Análise e Desenvolvimento de Sistemas (ADS)',
   institution: 'Universidade São Judas Tadeu',
-  status: 'Concluída ✅',
+  status: 'Julho 2024 - Presente ⏳',
   description:
     'Formação focada em <strong>Engenharia de Software e Desenvolvimento Full-Stack</strong>. Sólidos conhecimentos em Lógica de Programação, Orientação a Objetos (Java), Modelagem de Dados SQL e Metodologias Ágeis. Capacidade técnica para análise de requisitos e entrega de soluções escaláveis voltadas às necessidades do mercado.',
   subjects: [
@@ -288,10 +291,28 @@ export const languages: Language[] = [
 
 export const projects: Project[] = [
   {
+    title: 'Portfólio Profissional',
+    description: 'Meu portfólio profissional em forma de landing page com tema de terminal hacker e interface visual moderna. Desenvolvido para centralizar minha carreira, currículo e projetos.',
+    tech: 'React, TypeScript, CSS Modules',
+    url: 'https://github.com/GiovanniBolsoni/My-Professional-Portfolio'
+  },
+  {
     title: 'Femanic&Co',
-    description: 'Sistema para tornar a compra de roupas mais inteligente e segura para o público-alvo.',
+    description: 'E-commerce de moda, sistema para tornar a compra de roupas mais inteligente e segura para o público-alvo.',
     tech: 'JavaScript',
     url: 'https://github.com/GiovanniBolsoni/Femanic-Co'
+  },
+  {
+    title: 'Generate AI',
+    description: 'Geração de conteúdo com IA, aplicação web que consome a API do GroqCloud (LLM) para gerar postagens, títulos, resumos e reescritas de texto a partir de uma ideia do usuário.',
+    tech: 'Python, Flask, APIs REST',
+    url: '#'
+  },
+  {
+    title: 'MetalZombieBlast',
+    description: 'Jogo Run & Gun 2D estilo Metal Slug feito do zero em Java 21 puro (Swing + Java2D), sem uso de engines externas.',
+    tech: 'Java (Swing, Java2D)',
+    url: '#'
   },
   {
     title: 'SENAI JavaScript',
@@ -314,3 +335,4 @@ export const projects: Project[] = [
     architectureUrl: 'https://github.com/GiovanniBolsoni/Career-Os#arquitetura'
   }
 ];
+

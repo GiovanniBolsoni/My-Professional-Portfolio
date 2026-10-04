@@ -4,6 +4,7 @@ import styles from './Header.module.css';
 import { i18n } from '../../data/i18n';
 import { applyTheme, defaultThemeName, themes } from '../../themes/themes';
 import { scrollToTop } from '../../utils/scroll';
+import { socials } from '../../data/resume';
 
 export const Header = () => {
   const lang = 'pt'; // To be made dynamic later
@@ -70,15 +71,24 @@ export const Header = () => {
           </nav>
 
           <div className={styles.socialNav}>
-            <a href="https://github.com/GiovanniBolsoni" target="_blank" rel="noreferrer" aria-label="GitHub" className={styles.socialIcon}>
-              <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="GitHub" width={20} height={20} style={{ filter: theme === 'default' ? 'invert(1)' : 'none' }} />
-            </a>
-            <a href="https://www.linkedin.com/in/giovanni-bolsoni/" target="_blank" rel="noreferrer" aria-label="LinkedIn" className={styles.socialIcon}>
-              <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/LinkedIn_icon.svg/1280px-LinkedIn_icon.svg.png" alt="LinkedIn" width={20} height={20} />
-            </a>
-            <a href="https://www.instagram.com/_bolsoni_/" target="_blank" rel="noreferrer" aria-label="Instagram" className={styles.socialIcon}>
-              <img src="https://cdn-icons-png.flaticon.com/512/1384/1384063.png" alt="Instagram" width={20} height={20} />
-            </a>
+            {socials.map((social) => (
+              <a 
+                key={social.label} 
+                href={social.href} 
+                target="_blank" 
+                rel="noreferrer" 
+                aria-label={social.label} 
+                className={styles.socialIcon}
+              >
+                <img 
+                  src={social.icon} 
+                  alt={social.label} 
+                  width={20} 
+                  height={20} 
+                  className={social.monochrome ? styles.monochromeIcon : ''} 
+                />
+              </a>
+            ))}
           </div>
           
           <button className={styles.themeBtn} onClick={toggleTheme} aria-label="Toggle Theme">

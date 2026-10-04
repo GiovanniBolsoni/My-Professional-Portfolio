@@ -45,7 +45,7 @@ export default function App() {
     }
   }, [isUnlocked]);
 
-  useScrollLock(isUnlocked);
+  useScrollLock(isUnlocked || showOverlay);
 
   useEffect(() => {
     const handleBreachStart = () => {
@@ -206,7 +206,24 @@ export default function App() {
             <BootTerminal onTransition={handleTransition} />
           </div>
         ) : (
-          <div key="gui" className={styles.mainContent} id="gui-container">
+          <motion.div 
+            key="gui" 
+            className={styles.mainContent} 
+            id="gui-container"
+            initial={{ opacity: 0, filter: 'blur(10px) brightness(2)' }}
+            animate={{ 
+              opacity: [0, 0.8, 0.4, 1, 0.8, 1], 
+              filter: [
+                'blur(10px) brightness(2)', 
+                'blur(5px) brightness(1.5)', 
+                'blur(8px) brightness(1.8)', 
+                'blur(0px) brightness(1)', 
+                'blur(2px) brightness(1.2)', 
+                'blur(0px) brightness(1)'
+              ] 
+            }}
+            transition={{ duration: 0.5, times: [0, 0.2, 0.4, 0.6, 0.8, 1], ease: 'linear' }}
+          >
             <Header />
             <main>
               <Hero />
@@ -222,11 +239,6 @@ export default function App() {
             <CommandPalette />
             <FloatingTerminalBtn onClick={() => setShowOverlay(true)} />
             
-            <AnimatePresence>
-              {showOverlay && (
-                <TerminalOverlay key="terminal-overlay" onClose={() => setShowOverlay(false)} />
-              )}
-            </AnimatePresence>
 
             <AnimatePresence>
               {isUnlocked && (
@@ -245,7 +257,12 @@ export default function App() {
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {showOverlay && (
+          <TerminalOverlay key="terminal-overlay" onClose={() => setShowOverlay(false)} />
         )}
       </AnimatePresence>
     </div>

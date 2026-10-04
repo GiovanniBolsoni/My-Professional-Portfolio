@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { Search, ArrowRight, Monitor, Download, Sun, Github } from 'lucide-react';
+import { Search, ArrowRight, Monitor, Download, Sun, GitCommit } from 'lucide-react';
 import styles from './CommandPalette.module.css';
 import { useScrollLock } from '../../hooks/useScrollLock';
 
@@ -57,7 +57,7 @@ export const CommandPalette = () => {
     },
     {
       id: 'github',
-      icon: <Github size={16} />,
+      icon: <GitCommit size={16} />,
       label: 'Ir para Commits',
       action: () => {
         window.dispatchEvent(new CustomEvent('nav-transition', { detail: { targetId: '#github' } }));
@@ -78,7 +78,7 @@ export const CommandPalette = () => {
       icon: <Download size={16} />,
       label: 'Baixar Currículo',
       action: () => {
-        window.open('https://drive.google.com/file/d/1R_atrtgxYFmYXBWWv-8B-2dwGwDFLDrX/view', '_blank');
+        window.open('/curriculo-giovanni-bolsoni.pdf', '_blank');
         setIsOpen(false);
       }
     },

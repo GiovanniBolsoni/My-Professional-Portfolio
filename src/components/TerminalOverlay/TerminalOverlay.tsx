@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion } from 'framer-motion';
 import { Terminal } from '../../terminal/Terminal';
@@ -45,22 +45,30 @@ export const TerminalOverlay = ({ onClose }: TerminalOverlayProps) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
+  const [isBreaching, setIsBreaching] = useState(false);
+
+  useEffect(() => {
+    const handleBreach = () => setIsBreaching(true);
+    window.addEventListener('breach-start', handleBreach);
+    return () => window.removeEventListener('breach-start', handleBreach);
+  }, []);
+
   return createPortal(
     <motion.div 
       className={styles.overlay}
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      animate={{ opacity: isBreaching ? 0 : 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
+      transition={{ duration: isBreaching ? 0 : 0.2 }}
       onClick={onClose}
       data-lenis-prevent="true"
     >
       <motion.div 
         className={styles.window}
         initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
+        animate={{ y: isBreaching ? 20 : 0, opacity: isBreaching ? 0 : 1 }}
         exit={{ y: 20, opacity: 0 }}
-        transition={{ duration: 0.3 }}
+        transition={{ duration: isBreaching ? 0 : 0.3 }}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
