@@ -306,13 +306,13 @@ export const projects: Project[] = [
     title: 'Generate AI',
     description: 'Geração de conteúdo com IA, aplicação web que consome a API do GroqCloud (LLM) para gerar postagens, títulos, resumos e reescritas de texto a partir de uma ideia do usuário.',
     tech: 'Python, Flask, APIs REST',
-    url: '#'
+    url: 'https://github.com/GiovanniBolsoni/Generate-AI'
   },
   {
     title: 'MetalZombieBlast',
     description: 'Jogo Run & Gun 2D estilo Metal Slug feito do zero em Java 21 puro (Swing + Java2D), sem uso de engines externas.',
     tech: 'Java (Swing, Java2D)',
-    url: '#'
+    url: 'https://github.com/GiovanniBolsoni/MetalZombieBlast'
   },
   {
     title: 'SENAI JavaScript',
