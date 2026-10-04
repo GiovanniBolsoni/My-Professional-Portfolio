@@ -9,49 +9,48 @@ export const NavTransitionOverlay = () => {
   const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleNav = (e: CustomEvent) => {
-      const targetId = e.detail.targetId; // e.g. '#about'
+    const handleNav = async (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const targetId = customEvent.detail.targetId; // e.g. '#about'
       const targetName = targetId.replace('#', '');
       
       setIsActive(true);
       
-      const tl = gsap.timeline({
-        onComplete: () => {
-          // Scroll to element
-          scrollToSection(targetId);
-          
-          // Flash effect
-          gsap.to(overlayRef.current, {
-            opacity: 0,
-            duration: 0.3,
-            delay: 0.2,
-            onComplete: () => setIsActive(false)
-          });
-        }
-      });
-
-      // Typewriter effect
-      const fullCmd = `> root@giovani:~$ cd ${targetName} && cat ${targetName}.json`;
+      const fullCmd = `> cd ${targetName}`;
       
-      tl.to(overlayRef.current, {
+      gsap.killTweensOf(overlayRef.current);
+      gsap.to(overlayRef.current, {
         opacity: 1,
-        duration: 0.1,
+        duration: 0.2,
       });
 
-      for (let i = 0; i <= fullCmd.length; i++) {
-        tl.add(() => {
-          setCommand(fullCmd.substring(0, i));
-        }, `+=${0.015}`); // Very fast typing
-      }
+      let currentIdx = 0;
+      const typeInterval = setInterval(() => {
+        if (currentIdx <= fullCmd.length) {
+          setCommand(fullCmd.substring(0, currentIdx));
+          currentIdx++;
+        } else {
+          clearInterval(typeInterval);
+        }
+      }, 30);
       
-      tl.add(() => {
-        setCommand(fullCmd + '\n\n[ OK ] Acesso concedido. Decriptando...');
-      }, '+=0.1');
-
+      // Scroll to element simultaneously
+      await scrollToSection(targetId);
+      
+      clearInterval(typeInterval);
+      setCommand(fullCmd + ' [ OK ]');
+      
+      // Fade out
+      gsap.to(overlayRef.current, {
+        opacity: 0,
+        duration: 0.5,
+        delay: 0.8,
+        onComplete: () => setIsActive(false)
+      });
     };
 
-    window.addEventListener('nav-transition', handleNav as EventListener);
-    return () => window.removeEventListener('nav-transition', handleNav as EventListener);
+    window.addEventListener('nav-transition', handleNav);
+    return () => window.removeEventListener('nav-transition', handleNav);
   }, []);
 
   if (!isActive) return null;
