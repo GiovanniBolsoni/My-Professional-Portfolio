@@ -48,7 +48,8 @@ function formatSocial(): string {
 
 function formatResume(): string {
   if (profile.resumePdf && (profile.resumePdf.startsWith("http") || profile.resumePdf.startsWith("/"))) {
-    return `Currículo em PDF: ${linkify(profile.resumePdf)}`;
+    const cleanLabel = profile.resumePdf.split('?')[0];
+    return `Currículo em PDF: ${linkify(profile.resumePdf, cleanLabel)}`;
   }
   return `Currículo em PDF: <span class="term-muted">ainda não disponível (placeholder: ${escapeHtml(
     profile.resumePdf || ''
@@ -129,7 +130,7 @@ function formatWhoami(): string {
 }
 
 function formatGiovanni(): string {
-  return `${escapeHtml(profile.shortName)} — ${escapeHtml(profile.roles[1].toLowerCase())} · ${escapeHtml(profile.roles[0].toLowerCase())}`;
+  return `${escapeHtml(profile.shortName)} — ${profile.roles.map(r => escapeHtml(r.toLowerCase())).join(' · ')}`;
 }
 
 function formatHelp(ctx: CommandContext): string {

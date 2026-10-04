@@ -4,7 +4,6 @@ import styles from './Header.module.css';
 import { i18n } from '../../data/i18n';
 import { applyTheme, defaultThemeName, themes } from '../../themes/themes';
 import { scrollToTop } from '../../utils/scroll';
-import { socials } from '../../data/resume';
 
 export const Header = () => {
   const lang = 'pt'; // To be made dynamic later

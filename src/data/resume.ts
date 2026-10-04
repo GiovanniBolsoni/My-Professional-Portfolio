@@ -74,15 +74,15 @@ export interface Project {
 export const profile: Profile = {
   name: 'Giovanni Bolsoni Fernandes',
   shortName: 'Giovanni Bolsoni',
-  roles: ['Desenvolvedor Full Stack em Progresso', 'Suporte Técnico', 'Analista de Sistemas'],
+  roles: ['Desenvolvedor Full-Stack', 'Suporte Técnico', 'Analista de Sistemas', 'Analista de CRM'],
   location: 'São Paulo, SP',
   email: 'giovannibolsoni502@gmail.com',
   photo: '/profile.jpg',
-  resumePdf: '/curriculo-giovanni-bolsoni.pdf',
-  objective: 'Analista de Sistemas, Suporte Técnico ou Desenvolvedor Web Front-end',
+  resumePdf: '/curriculo-giovanni-bolsoni.pdf?v=2026-10-04',
+  objective: 'Desenvolvedor Full-Stack, Suporte Técnico, Analista de Sistemas ou Analista de CRM',
   summary: [
-    'Comecei minha carreira em <strong>suporte técnico e atendimento</strong>, onde passei mais de 2 anos resolvendo incidentes sob SLA, documentando soluções via metodologia <strong>KCS</strong> e sendo o elo entre times técnicos e clientes. Foi ali que desenvolvi raciocínio analítico e visão de negócio.',
-    'Hoje aplico essa mesma lógica de resolução de problemas para me tornar um futuro desenvolvedor <strong>Full-Stack</strong>, construindo interfaces com <strong>React, JavaScript, HTML5, CSS3 e Python</strong>, unindo base técnica sólida a uma postura organizada e orientada a resultado.',
+    'Comecei minha carreira em <strong>suporte técnico e CRM</strong>, onde passei mais de 2 anos resolvendo incidentes sob SLA, documentando soluções via metodologia <strong>KCS</strong> e sendo o elo entre times técnicos e clientes. Foi ali que desenvolvi raciocínio analítico, comunicação assertiva e visão de negócio para times ágeis.',
+    'Hoje, formado em <strong>Análise e Desenvolvimento de Sistemas</strong>, atuo como Desenvolvedor <strong>Full-Stack</strong>, com domínio prático de <strong>HTML5, CSS3, JavaScript, React, Python e Flask</strong> aplicados em projetos reais, unindo base técnica sólida a uma postura organizada e orientada a resultado.',
   ],
 };
 
@@ -186,7 +186,7 @@ export const certifications: Certification[] = [
   },
   {
     title: 'Desenvolvimento em JavaScript',
-    org: 'SENAI',
+    org: 'SENAI Paulo Antonio Skaf',
     year: 2026,
     hours: '60h',
     category: 'Desenvolvimento',
@@ -195,7 +195,7 @@ export const certifications: Certification[] = [
   },
   {
     title: 'Implantação de Serviços em Nuvem — AWS Cloud Practitioner Foundational',
-    org: 'SENAI',
+    org: 'SENAI Paulo Antonio Skaf',
     year: 2026,
     hours: '40h',
     category: 'Cloud',
@@ -292,8 +292,8 @@ export const languages: Language[] = [
 export const projects: Project[] = [
   {
     title: 'Portfólio Profissional',
-    description: 'Meu portfólio profissional em forma de landing page com tema de terminal hacker e interface visual moderna. Desenvolvido para centralizar minha carreira, currículo e projetos.',
-    tech: 'React, TypeScript, CSS Modules',
+    description: 'Landing page interativa com terminal, interface gráfica, temas e personalização por visitante.',
+    tech: 'React + TypeScript',
     url: 'https://github.com/GiovanniBolsoni/My-Professional-Portfolio'
   },
   {
