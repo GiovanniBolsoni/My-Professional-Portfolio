@@ -314,18 +314,7 @@ export const projects: Project[] = [
     tech: 'Java (Swing, Java2D)',
     url: 'https://github.com/GiovanniBolsoni/MetalZombieBlast'
   },
-  {
-    title: 'SENAI JavaScript',
-    description: 'Curso de Aperfeiçoamento Profissional em Desenvolvimento JavaScript.',
-    tech: 'JavaScript',
-    url: 'https://github.com/GiovanniBolsoni/SENAI_JavaScript'
-  },
-  {
-    title: 'SENAI AWS Cloud Practitioner 2026',
-    description: 'Repositório de acompanhamento do curso AWS Cloud Practitioner.',
-    tech: 'AWS',
-    url: 'https://github.com/GiovanniBolsoni/SENAI_AWS-cloud-practitioner-2026'
-  },
+
   {
     title: 'Career-OS',
     description: 'App com IA para jovens de tech e dados no Brasil organizarem candidaturas em Kanban, simularem entrevistas, otimizarem o currículo e receberem insights semanais.',
