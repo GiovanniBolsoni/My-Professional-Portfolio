@@ -85,7 +85,7 @@ export const Header = () => {
                   alt={social.label}
                   width={20}
                   height={20}
-                  style={{ filter: social.monochrome && theme === 'default' ? 'invert(1)' : 'none' }}
+                  style={{ filter: social.monochrome && theme !== 'light' ? 'invert(1)' : 'none' }}
                 />
               </a>
             ))}

@@ -87,11 +87,11 @@ export const profile: Profile = {
 };
 
 export const socials: Social[] = [
-  { label: 'GitHub', href: 'https://github.com/GiovanniBolsoni', icon: '/icons/github.svg', monochrome: true },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/giovanni-bolsoni/', icon: '/icons/linkedin.svg' },
-  { label: 'Instagram', href: 'https://www.instagram.com/_bolsoni_/', icon: '/icons/instagram.svg' },
+  { label: 'GitHub', href: 'https://github.com/GiovanniBolsoni', icon: '/icons/github.png', monochrome: true },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/giovanni-bolsoni/', icon: '/icons/linkedin.png' },
+  { label: 'Instagram', href: 'https://www.instagram.com/_bolsoni_/', icon: '/icons/instagram.png' },
   { label: 'Notion', href: 'https://giovanni-professional-portfolio.notion.site/Professional-Portfolio-28822110d735804795c7d33e038570d3', icon: '/icons/notion.svg', monochrome: true },
-  { label: 'Credly', href: 'https://www.credly.com/users/giovanni-bolsoni', icon: '/icons/credly.svg' },
+  { label: 'Credly', href: 'https://www.credly.com/users/giovanni-bolsoni', icon: '/icons/credly_square.svg' },
 ];
 
 export const skills: SkillGroup[] = [
