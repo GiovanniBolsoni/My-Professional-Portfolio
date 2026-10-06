@@ -28,6 +28,7 @@ import { CustomCursor } from './components/CustomCursor/CustomCursor';
 import { useKonamiCode } from './hooks/useKonamiCode';
 import { useScrollLock } from './hooks/useScrollLock';
 import { registerVisit, getVisitor } from './visitor/visitorStore';
+import { profile } from './data/resume';
 import styles from './App.module.css';
 
 import { BreachTransition } from './components/BreachTransition/BreachTransition';
@@ -114,7 +115,7 @@ export default function App() {
   
   [!] ACESSO NÃO AUTORIZADO DETECTADO [!]
   Ah, vejo que você é um desenvolvedor explorando o código-fonte...
-  Me mande um email e vamos conversar: giovani.soares@example.com
+  Me mande um email e vamos conversar: ${profile.email}
   `;
     
     if (!window.hasOwnProperty('easterEggPrinted')) {
