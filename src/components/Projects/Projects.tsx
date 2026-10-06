@@ -1,7 +1,7 @@
 import { useRef, MouseEvent, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { Code, ExternalLink, Network } from 'lucide-react';
+import { Code, ExternalLink } from 'lucide-react';
 import styles from './Projects.module.css';
 import { projects } from '../../data/resume';
 import { i18n } from '../../data/i18n';
@@ -77,18 +77,7 @@ const ProjectCard = ({ proj }: { proj: any }) => {
           <span className={styles.tag}>{proj.tech}</span>
         </div>
         <div className={styles.actions}>
-          {proj.title === 'Career-OS' && (
-            <>
-              <a href="https://github.com/GiovanniBolsoni/Career-Os/blob/main/README.md" target="_blank" rel="noreferrer" className={styles.btnLink}>
-                <ExternalLink size={16} /> Ler Case Study
-              </a>
-              {proj.architectureUrl && (
-                <a href={proj.architectureUrl} target="_blank" rel="noreferrer" className={styles.btnLink}>
-                  <Network size={16} /> Ver Arquitetura
-                </a>
-              )}
-            </>
-          )}
+
           <a href={proj.url} target="_blank" rel="noreferrer" className={styles.btnLink}>
             <Code size={16} /> Ver Código
           </a>

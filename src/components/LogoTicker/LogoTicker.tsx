@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './LogoTicker.module.css';
+import { GlitchText } from '../GlitchText/GlitchText';
 
 type Skill = {
   id: string;
@@ -57,6 +58,19 @@ export const LogoTicker = () => {
   const SPEED_PX_PER_SECOND = 35;
   const marqueeGroupRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setIsVisible(true);
+      },
+      { threshold: 0.1 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (!marqueeGroupRef.current || !trackRef.current) return;
@@ -78,13 +92,13 @@ export const LogoTicker = () => {
   }, []);
 
   return (
-    <section className={styles.techSection}>
+    <section className={styles.techSection} ref={sectionRef}>
       <div className={styles.container}>
         <div className={styles.header}>
           <h2 className={styles.title}>
-            <span className={styles.prompt}>&gt;</span> tech_stack.init()
+            <span className={styles.prompt}>&gt;</span> <GlitchText as="span" text="tech_stack.init()" reveal={true} revealTrigger={isVisible} />
           </h2>
-          <p className={styles.subtitle}>Languages and Technologies</p>
+          <GlitchText as="p" text="Languages and Technologies" className={styles.subtitle} reveal={true} revealTrigger={isVisible} revealDelay={200} />
         </div>
         
         <div className={styles.marqueeContainer}>
