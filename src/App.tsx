@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Lenis from 'lenis';
 import gsap from 'gsap';
@@ -12,7 +12,6 @@ import { Hero } from './components/Hero/Hero';
 import { LogoTicker } from './components/LogoTicker/LogoTicker';
 import { About } from './components/About/About';
 import { Certifications } from './components/Certifications/Certifications';
-import { GithubHistory } from './components/GithubHistory/GithubHistory';
 import { Projects } from './components/Projects/Projects';
 import { CommandPalette } from './components/CommandPalette/CommandPalette';
 import { Footer } from './components/Footer/Footer';
@@ -20,8 +19,11 @@ import { Footer } from './components/Footer/Footer';
 import { Contact } from './components/Contact/Contact';
 import { BootTerminal } from './components/BootTerminal/BootTerminal';
 import { FloatingTerminalBtn } from './components/FloatingTerminalBtn/FloatingTerminalBtn';
-import { TerminalOverlay } from './components/TerminalOverlay/TerminalOverlay';
 import { applyTheme, themes, defaultThemeName } from './themes/themes';
+
+const GithubHistory = lazy(() => import('./components/GithubHistory/GithubHistory').then(m => ({ default: m.GithubHistory })));
+const TerminalOverlay = lazy(() => import('./components/TerminalOverlay/TerminalOverlay').then(m => ({ default: m.TerminalOverlay })));
+
 import { NavTransitionOverlay } from './components/NavTransitionOverlay/NavTransitionOverlay';
 import { NetworkBackground } from './components/NetworkBackground/NetworkBackground';
 import { CustomCursor } from './components/CustomCursor/CustomCursor';
@@ -232,7 +234,9 @@ export default function App() {
               <About />
               <Projects />
               <Certifications />
-              <GithubHistory />
+              <Suspense fallback={<div style={{ height: '300px' }} />}>
+                <GithubHistory />
+              </Suspense>
               <Contact />
             </main>
             
@@ -263,7 +267,9 @@ export default function App() {
       </AnimatePresence>
       <AnimatePresence>
         {showOverlay && (
-          <TerminalOverlay key="terminal-overlay" onClose={() => setShowOverlay(false)} />
+          <Suspense fallback={null}>
+            <TerminalOverlay key="terminal-overlay" onClose={() => setShowOverlay(false)} />
+          </Suspense>
         )}
       </AnimatePresence>
     </div>

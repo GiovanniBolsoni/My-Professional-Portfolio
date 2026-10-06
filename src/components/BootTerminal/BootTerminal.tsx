@@ -23,6 +23,9 @@ export const BootTerminal = ({ onTransition }: BootTerminalProps) => {
 
     return () => {
       window.removeEventListener('terminal-transition', handleTransition);
+      if (terminalInstance.current) {
+        terminalInstance.current.destroy();
+      }
     };
   }, [onTransition]);
 

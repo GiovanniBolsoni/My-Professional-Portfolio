@@ -34,7 +34,7 @@
 
 .skullAnim {
   font-family: "Cascadia Mono", "DejaVu Sans Mono", Consolas, "Courier New", monospace;
-  font-size: min(3.6vh, 6.4vw);
+  font-size: min(5vh, 8vw);
   line-height: 1;
   letter-spacing: 0;
   margin: 0;

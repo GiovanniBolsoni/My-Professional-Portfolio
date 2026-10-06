@@ -31,6 +31,9 @@ export const TerminalOverlay = ({ onClose }: TerminalOverlayProps) => {
 
     return () => {
       window.removeEventListener('terminal-transition', handleTransition);
+      if (terminalInstance.current) {
+        terminalInstance.current.destroy();
+      }
     };
   }, [onClose]);
 

@@ -61,7 +61,7 @@ export const BreachTransition: React.FC<BreachTransitionProps> = ({ onDecryptSta
       const topJawPart = SKULL_ART.slice(0, 13);
       const bottomJawPart = SKULL_ART.slice(13);
       
-      const emptyMouthLine = "   ██▌           ▐██".padEnd(23, ' ');
+      const emptyMouthLine = "█████████         █████████";
 
       const setMouth = (lines: number) => {
         const middle: string[] = [];

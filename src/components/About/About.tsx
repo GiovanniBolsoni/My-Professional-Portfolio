@@ -120,6 +120,12 @@ export const About = () => {
 
               {activeTab === 'stack' && (
                 <div className={styles.stackList}>
+                  <div style={{ marginBottom: '2rem' }}>
+                    <h3 className={styles.role} style={{ fontSize: '1.2rem', marginBottom: '0.5rem', color: 'var(--term-cyan, var(--cyan))' }}>
+                      <span className={styles.prompt}>&gt;</span> <GlitchText as="span" text="tech_stack.init()" reveal={true} revealTrigger={isVisible} />
+                    </h3>
+                    <p className={styles.company} style={{ fontSize: '0.9rem', color: 'var(--muted)' }}>Languages and Technologies</p>
+                  </div>
                   {skills.map((skillGroup, idx) => (
                     <div key={idx} className={styles.stackCategory}>
                       <h4 className={styles.categoryName}>{skillGroup.group}</h4>

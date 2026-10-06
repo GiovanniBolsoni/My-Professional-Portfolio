@@ -38,6 +38,7 @@ export class Terminal {
   private isAnimating = false;
   private skipRequested = false;
   private pendingInputResolver: ((value: string) => void) | null = null;
+  private handleWindowFocus?: () => void;
 
   constructor(root: HTMLElement, options: TerminalOptions = { withTopBar: true }) {
     this.root = root;
@@ -116,7 +117,20 @@ export class Terminal {
     });
 
     // mantém o foco no input sempre que possível, sem atrapalhar seleção de texto
-    window.addEventListener("focus", () => this.inputEl.focus());
+    this.handleWindowFocus = () => {
+      // Verifica se a seleção de texto ainda está ativa
+      const selection = window.getSelection();
+      if (!selection || selection.toString().length === 0) {
+        this.inputEl.focus();
+      }
+    };
+    window.addEventListener("focus", this.handleWindowFocus);
+  }
+
+  public destroy(): void {
+    if (this.handleWindowFocus) {
+      window.removeEventListener("focus", this.handleWindowFocus);
+    }
   }
 
   private async boot(): Promise<void> {
@@ -243,10 +257,10 @@ export class Terminal {
     const name = getVisitor().name || "visitante";
     const greeting = name !== "visitante" ? `Olá, ${escapeHtml(name)}, seja bem-vindo(a)!` : `Olá, seja bem vindo(a)!`;
     return [
-      `<span class="term-accent" style="font-size: 1.5em; font-weight: bold; text-shadow: 0 0 5px var(--accent);">${greeting}</span>`,
+      `<span class="term-accent" style="font-size: 1.5em; font-weight: bold; text-shadow: 0 0 5px var(--term-accent);">${greeting}</span>`,
       "",
-      `Digite <span class="term-cyan">help</span> para ver os comandos.`,
-      `Para acessar a interface gráfica, digite <span class="term-cyan">start</span>.`
+      `<span class="term-fg">Digite <span class="term-cyan">help</span> para ver os comandos.</span>`,
+      `<span class="term-fg">Para acessar a interface gráfica, digite <span class="term-cyan">start</span>.</span>`
     ].join("\n");
   }
 

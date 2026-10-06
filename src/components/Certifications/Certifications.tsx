@@ -119,7 +119,7 @@ export const Certifications = () => {
 
                 {selectedCert.image && (
                   <div className={styles.modalImageContainer}>
-                    <img src={selectedCert.image} alt={selectedCert.title} className={styles.modalImage} />
+                    <img loading="lazy" src={selectedCert.image} alt={selectedCert.title} className={styles.modalImage} />
                   </div>
                 )}
 

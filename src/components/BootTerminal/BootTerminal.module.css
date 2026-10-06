@@ -88,7 +88,7 @@
   font-family: var(--font-mono);
   font-size: 1rem;
   padding: 1rem;
-  color: var(--term-fg, var(--fg));
+  color: var(--term-fg, #e0e0e0);
 }
 
 
@@ -128,7 +128,7 @@
   flex: 1;
   background: transparent;
   border: none;
-  color: var(--term-fg, var(--fg));
+  color: var(--term-fg, #e0e0e0);
   font-family: inherit;
   font-size: inherit;
   outline: none;
@@ -141,7 +141,8 @@
 :global(.term-cyan) { color: var(--term-cyan, var(--cyan)); }
 :global(.term-muted) { color: var(--term-muted, var(--muted)); }
 :global(.term-error) { color: var(--term-error, #ff5f56); }
-:global(.cmd-echo) { color: var(--term-fg, var(--fg)); }
+:global(.cmd-echo) { color: var(--term-fg, #e0e0e0); }
+:global(.term-fg) { color: var(--term-fg, #e0e0e0); }
 :global(.banner-art) {
   color: var(--term-cyan, var(--cyan));
   font-weight: bold;

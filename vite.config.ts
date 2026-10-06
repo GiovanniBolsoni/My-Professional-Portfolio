@@ -6,4 +6,15 @@ export default defineConfig({
   resolve: {
     preserveSymlinks: true,
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          gsap: ['gsap', '@gsap/react'],
+          framer: ['framer-motion'],
+        },
+      },
+    },
+  },
 })
