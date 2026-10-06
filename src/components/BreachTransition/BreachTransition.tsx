@@ -8,29 +8,7 @@ interface BreachTransitionProps {
   skip?: boolean;
 }
 
-const topJaw = [
-  "▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^",
-  "▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-?▄-?▄-?▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-?▄-?▄-?▄-^▄-^▄-^▄-^▄-^▄-^▄-^",
-  "▄-^▄-^▄-^▄-^▄-?▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-?▄-^▄-^▄-^▄-^",
-  "▄-^▄-^▄-^▄\"'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄\"'▄-^▄-^▄-^",
-  "▄-^▄-^▄-O▄\"'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄\"'▄-?▄-^▄-^",
-  "▄-^▄-^▄-'▄\"\"▄\"?▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄\"O▄\"~▄-'▄-^▄-^",
-  "▄-^▄-^▄-'▄-'▄\"\"▄\"?▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄\"O▄\"~▄-'▄-'▄-^▄-^",
-  "▄-^▄-^▄-'▄-'▄\"O▄\"~▄-\"▄-\"▄-\"▄-\"▄-\"▄-'▄-'▄-'▄-'▄-'▄-\"▄-\"▄-\"▄-\"▄-\"▄\"\"▄\"?▄-'▄-'▄-^▄-^",
-  "▄-^▄-^▄-O▄-'▄\"'▄-^▄-^▄-^▄-^▄-^▄-^▄-O▄-'▄-'▄-'▄-?▄-^▄-^▄-^▄-^▄-^▄-^▄\"'▄-'▄-?▄-^▄-^",
-  "▄-^▄-^▄-^▄-'▄\"'▄-?▄-^▄-^▄-^▄-?▄-?▄-'▄-'▄-\"▄-'▄-'▄-?▄-?▄-^▄-^▄-^▄-O▄\"'▄-'▄-^▄-^▄-^",
-  "▄-^▄-^▄-?▄\"?▄\"~▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-?▄-^▄-O▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄\"\"▄\"?▄-?▄-^▄-^",
-  "▄-^▄-^▄-\"▄-'▄-'▄-'▄-\"▄-\"▄-\"▄-\"▄-'▄-'▄-?▄-^▄-?▄-'▄-'▄-\"▄-\"▄-\"▄-\"▄-'▄-'▄-'▄-\"▄-^▄-^",
-  "▄-^▄-^▄-^▄-^▄-\"▄\"?▄\"~▄-^▄-^▄-O▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-?▄-^▄-^▄\"\"▄\"?▄-\"▄-^▄-^▄-^▄-^"
-];
-const bottomJaw = [
-  "▄-^▄-^▄-^▄-^▄-^▄-'▄-'▄-?▄-^▄\"?▄\"▄\"▄\"▄\"▄\"▄\"▄\"▄\"?▄-^▄-O▄-'▄-'▄-^▄-^▄-^▄-^▄-^",
-  "▄-^▄-^▄-^▄-^▄-O▄-'▄-'▄-'▄-?▄\"▄\"▄\"▄\"▄\"▄\"▄\"▄\"▄\"▄-?▄-'▄-'▄-'▄-?▄-^▄-^▄-^▄-^",
-  "▄-^▄-^▄-^▄-^▄-^▄-\"▄-'▄-'▄-'▄\"\"▄\"▄\"▄\"▄\"▄\"▄\"▄\"▄\"~▄-'▄-'▄-'▄-\"▄-^▄-^▄-^▄-^▄-^",
-  "▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-\"▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-'▄-\"▄-^▄-^▄-^▄-^▄-^▄-^▄-^",
-  "▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-\"▄-\"▄-\"▄-\"▄-\"▄-\"▄-\"▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^",
-  "▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^▄-^"
-];
+import { SKULL_ART } from './skullArt';
 
 export const BreachTransition: React.FC<BreachTransitionProps> = ({ onDecryptStart, onComplete, skip }) => {
   const [phase, setPhase] = useState<'skull' | 'breach' | 'rupture' | 'decrypt'>('skull');
@@ -80,25 +58,24 @@ export const BreachTransition: React.FC<BreachTransitionProps> = ({ onDecryptSta
 
     const sequence = async () => {
       // 1. Skull Animation
-      const jawCycle = [0, 1, 2, 3, 2, 1];
-      for (let i = 0; i < 21; i++) {
+      const topJawPart = SKULL_ART.slice(0, 13);
+      const bottomJawPart = SKULL_ART.slice(13);
+      
+      const emptyMouthLine = "   ██▌           ▐██".padEnd(23, ' ');
+
+      const setMouth = (lines: number) => {
+        const middle: string[] = [];
+        for (let j = 0; j < lines; j++) {
+           middle.push(emptyMouthLine);
+        }
+        setSkullText([...topJawPart, ...middle, ...bottomJawPart].join("\n"));
+      };
+
+      const rhythm = [0, 1, 2, 2, 1, 0, 1, 2, 1, 0, 2, 2, 1, 0];
+      for (const openLines of rhythm) {
         if (isCancelled) return;
-        const jawOpenLevel = jawCycle[i % jawCycle.length];
-        const fallingText: string[] = [];
-        
-        if (jawOpenLevel >= 2 && i % 2 === 0) {
-          fallingText.unshift("▄-^▄-^▄-^▄-^▄-^   HA HA HA HA   ▄-^▄-^▄-^▄-^▄-^");
-        } else {
-          fallingText.unshift("▄-^▄-^▄-^▄-^▄-^                 ▄-^▄-^▄-^▄-^▄-^");
-        }
-        
-        const currentMiddle = fallingText.slice(0, jawOpenLevel);
-        while(currentMiddle.length < jawOpenLevel) {
-          currentMiddle.push("▄-^▄-^▄-^▄-^▄-^                 ▄-^▄-^▄-^▄-^▄-^");
-        }
-        
-        setSkullText([...topJaw, ...currentMiddle, ...bottomJaw].join("\n"));
-        await new Promise(r => setTimeout(r, 60)); // Faster skull, total ~1.2s
+        setMouth(openLines);
+        await new Promise(r => setTimeout(r, 90));
       }
 
       if (isCancelled) return;
