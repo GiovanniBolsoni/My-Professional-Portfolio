@@ -61,17 +61,22 @@ export const BreachTransition: React.FC<BreachTransitionProps> = ({ onDecryptSta
       const topJawPart = SKULL_ART.slice(0, 13);
       const bottomJawPart = SKULL_ART.slice(13);
       
-      const emptyMouthLine = "█████████         █████████";
+      const emptyMouthLine = "   ██▌           ▐██".padEnd(23, ' ');
 
       const setMouth = (lines: number) => {
         const middle: string[] = [];
         for (let j = 0; j < lines; j++) {
            middle.push(emptyMouthLine);
         }
-        setSkullText([...topJawPart, ...middle, ...bottomJawPart].join("\n"));
+        // Max height is 17 + 2 = 19 lines, pad bottom to prevent shifting up
+        const bottomPadding: string[] = [];
+        for (let j = 0; j < 2 - lines; j++) {
+           bottomPadding.push("".padEnd(23, ' '));
+        }
+        setSkullText([...topJawPart, ...middle, ...bottomJawPart, ...bottomPadding].join("\n"));
       };
 
-      const rhythm = [0, 1, 2, 2, 1, 0, 1, 2, 1, 0, 2, 2, 1, 0];
+      const rhythm = [0, 1, 2, 2, 1, 0, 1, 2, 2, 1, 0, 2, 2, 1, 0, 0];
       for (const openLines of rhythm) {
         if (isCancelled) return;
         setMouth(openLines);
